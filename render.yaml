@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: cardgame-server
+    runtime: node
+    plan: free
+    buildCommand: npm i -g pnpm@latest && pnpm install
+    startCommand: pnpm --filter @cg/server start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: ALLOWED_ORIGIN
+        value: "*"
+      - key: SUPABASE_JWT_SECRET
+        sync: false

@@ -1,0 +1,19 @@
+{
+  "name": "cardgame",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,green \"pnpm --filter @cg/server dev\" \"pnpm --filter @cg/web dev\"",
+    "dev:server": "pnpm --filter @cg/server dev",
+    "dev:web": "pnpm --filter @cg/web dev",
+    "test": "pnpm -r --if-present test",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "build": "pnpm --filter @cg/web build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0",
+    "tsx": "^4.19.0"
+  }
+}
