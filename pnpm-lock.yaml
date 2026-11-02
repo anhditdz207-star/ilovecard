@@ -29,6 +29,9 @@ importers:
       '@cg/game-baccarat':
         specifier: workspace:*
         version: link:../../packages/games/baccarat
+      '@cg/game-bai-cao':
+        specifier: workspace:*
+        version: link:../../packages/games/bai-cao
       '@cg/game-demo':
         specifier: workspace:*
         version: link:../../packages/games/demo
@@ -60,6 +63,9 @@ importers:
       '@cg/game-baccarat':
         specifier: workspace:*
         version: link:../../packages/games/baccarat
+      '@cg/game-bai-cao':
+        specifier: workspace:*
+        version: link:../../packages/games/bai-cao
       '@cg/game-demo':
         specifier: workspace:*
         version: link:../../packages/games/demo
@@ -102,6 +108,12 @@ importers:
         version: link:../../shared
 
   packages/games/baccarat:
+    dependencies:
+      '@cg/shared':
+        specifier: workspace:*
+        version: link:../../shared
+
+  packages/games/bai-cao:
     dependencies:
       '@cg/shared':
         specifier: workspace:*

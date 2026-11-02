@@ -2,8 +2,9 @@ import { demoEngine } from "@cg/game-demo";
 import type { GameId } from "@cg/shared";
 import { bauCuaRulesText } from "@cg/game-bau-cua";
 import { baccaratRulesText } from "@cg/game-baccarat";
+import { baiCaoRulesText } from "@cg/game-bai-cao";
 
-const RULES: Partial<Record<GameId, string>> = { demo: demoEngine.rulesText, "bau-cua": bauCuaRulesText, baccarat: baccaratRulesText };
+const RULES: Partial<Record<GameId, string>> = { demo: demoEngine.rulesText, "bau-cua": bauCuaRulesText, baccarat: baccaratRulesText, "bai-cao": baiCaoRulesText };
 
 export function rulesFor(id: GameId) {
   return RULES[id] ?? "Luật chơi đang được cập nhật.";

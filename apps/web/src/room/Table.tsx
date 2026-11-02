@@ -6,6 +6,8 @@ import { RulesModal } from "../components/RulesModal";
 import { BauCuaTable } from "../games/bau-cua/BauCuaTable";
 import type { BaccaratView } from "@cg/game-baccarat";
 import { BaccaratTable } from "../games/baccarat/BaccaratTable";
+import type { BaiCaoView } from "@cg/game-bai-cao";
+import { BaiCaoTable } from "../games/bai-cao/BaiCaoTable";
 
 /** Generic table shell (room lobby + debug game view). Per-game UIs plug in under src/games/<id>/ (ChatGPT). */
 export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
@@ -77,6 +79,8 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
         </div>
       ) : info.gameId === "baccarat" && info.phase !== "lobby" && view ? (
         <BaccaratTable info={info} data={view.view as BaccaratView} seat={view.seat} toAct={view.toAct} result={result} send={send} />
+      ) : info.gameId === "bai-cao" && info.phase !== "lobby" && view ? (
+        <BaiCaoTable info={info} data={view.view as BaiCaoView} seat={view.seat} toAct={view.toAct} result={result} send={send} />
       ) : info.phase !== "lobby" && view && (
         <div className="mt-4 rounded-lg bg-black/30 p-3">
           <pre className="overflow-x-auto text-xs">{JSON.stringify(view.view, null, 1)}</pre>
