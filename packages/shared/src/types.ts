@@ -26,7 +26,7 @@ export const GAME_CATALOG: GameMeta[] = [
   { id: "tien-len-bac", name: "Tiến Lên Miền Bắc", minPlayers: 2, maxPlayers: 4, hasDealer: false, status: "planned" },
   { id: "bai-cao", name: "Bài Cào (Bài Điểm)", minPlayers: 2, maxPlayers: 12, hasDealer: true, status: "planned" },
   { id: "bai-cao-to", name: "Bài Cào Tố", minPlayers: 2, maxPlayers: 8, hasDealer: false, status: "planned" },
-  { id: "baccarat", name: "Baccarat", minPlayers: 1, maxPlayers: 12, hasDealer: false, status: "planned" },
+  { id: "baccarat", name: "Baccarat", minPlayers: 1, maxPlayers: 12, hasDealer: false, status: "ready" },
   { id: "poker", name: "Poker (Texas Hold'em)", minPlayers: 2, maxPlayers: 9, hasDealer: false, status: "planned" },
   { id: "demo", name: "Demo (Rút bài lớn nhất)", minPlayers: 2, maxPlayers: 6, hasDealer: true, status: "ready" },
 ];
