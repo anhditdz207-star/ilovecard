@@ -20,7 +20,7 @@ export interface GameMeta {
 }
 
 export const GAME_CATALOG: GameMeta[] = [
-  { id: "bau-cua", name: "Bầu Cua", minPlayers: 1, maxPlayers: 12, hasDealer: true, status: "planned" },
+  { id: "bau-cua", name: "Bầu Cua", minPlayers: 2, maxPlayers: 12, hasDealer: true, status: "ready" },
   { id: "xi-dach", name: "Xì Dách", minPlayers: 2, maxPlayers: 8, hasDealer: true, status: "planned" },
   { id: "tien-len-nam", name: "Tiến Lên Miền Nam", minPlayers: 2, maxPlayers: 4, hasDealer: false, status: "planned" },
   { id: "tien-len-bac", name: "Tiến Lên Miền Bắc", minPlayers: 2, maxPlayers: 4, hasDealer: false, status: "planned" },

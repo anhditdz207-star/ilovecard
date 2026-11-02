@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import type { Room } from "colyseus.js";
 import type { RoomInfo, S2C } from "@cg/shared";
+import type { BauCuaView } from "@cg/game-bau-cua";
 import { RulesModal } from "../components/RulesModal";
+import { BauCuaTable } from "../games/bau-cua/BauCuaTable";
 
 /** Generic table shell (room lobby + debug game view). Per-game UIs plug in under src/games/<id>/ (ChatGPT). */
 export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
@@ -33,7 +35,7 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
   const paused = info.phase === "paused" && info.paused;
 
   return (
-    <div className="mx-auto max-w-3xl p-4">
+    <div className={`mx-auto p-4 ${info?.gameId === "bau-cua" ? "max-w-6xl" : "max-w-3xl"}`}>
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-xl font-bold">Phòng {info.code} · {info.gameId} · cược {info.baseBet}</h2>
         <div className="flex gap-2">
@@ -67,7 +69,11 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
           <button className="rounded bg-amber-500 px-4 py-1.5 font-semibold text-black" onClick={() => send("start")}>Bắt đầu</button>
         </div>
       )}
-      {info.phase !== "lobby" && view && (
+      {info.gameId === "bau-cua" && info.phase !== "lobby" && view ? (
+        <div className="mt-4">
+          <BauCuaTable info={info} data={view.view as BauCuaView} seat={view.seat} toAct={view.toAct} result={result} send={send} />
+        </div>
+      ) : info.phase !== "lobby" && view && (
         <div className="mt-4 rounded-lg bg-black/30 p-3">
           <pre className="overflow-x-auto text-xs">{JSON.stringify(view.view, null, 1)}</pre>
           {view.toAct.includes(view.seat) && (

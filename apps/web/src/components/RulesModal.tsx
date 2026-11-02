@@ -1,7 +1,8 @@
 import { demoEngine } from "@cg/game-demo";
 import type { GameId } from "@cg/shared";
+import { bauCuaRulesText } from "@cg/game-bau-cua";
 
-const RULES: Partial<Record<GameId, string>> = { demo: demoEngine.rulesText };
+const RULES: Partial<Record<GameId, string>> = { demo: demoEngine.rulesText, "bau-cua": bauCuaRulesText };
 
 export function rulesFor(id: GameId) {
   return RULES[id] ?? "Luật chơi đang được cập nhật.";
