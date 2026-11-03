@@ -45,6 +45,8 @@ export interface GameEngine<S = any, A = any, V = any> {
   settle(s: S): Payout[];
   /** MUST return a legal action for a seat in toAct(s). */
   bot(s: S, seat: number, rng: RNG): A;
+  /** Optional: safe default when a HUMAN times out (e.g. pass/no bet/stand). If absent the room uses bot(). */
+  timeoutAction?(s: S, seat: number): A;
   /** Vietnamese rules text for the "Hướng dẫn" button. */
   rulesText: string;
 }

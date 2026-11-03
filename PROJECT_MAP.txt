@@ -1,7 +1,7 @@
 PROJECT_MAP.txt  --  Sơ đồ cây + chú thích. ĐỌC FILE NÀY ĐẦU TIÊN mỗi lần bắt đầu việc.
 Cập nhật NGAY khi thêm/xoá/đổi tên/đổi vai trò file. Mỗi dòng: đường dẫn  # chú thích  [trạng thái] [chủ: CLAUDE|GPT|OWNER]
 Trạng thái: PLAN = chưa làm | WIP = đang làm | DONE = xong có test
-Cập nhật lần cuối: 2026-11-02 GPT (P1 Bài Cào)
+Cập nhật lần cuối: 2026-11-03 GPT (Xì Dách integration)
 
 ROOT/
 ├─ SPEC.md                     # Luật dự án, stack, hợp đồng engine, giai đoạn. Nguồn sự thật duy nhất  [DONE][CLAUDE]
@@ -9,7 +9,7 @@ ROOT/
 ├─ CLAUDE.md                   # Lời nhắc việc cho Claude  [DONE][CLAUDE]
 ├─ HANDOFF.md                  # Ghi chú giao việc giữa 2 AI, thêm mới ở trên cùng, <=5 dòng/mục  [DONE][CLAUDE+GPT]
 ├─ CHANGELOG.md                # Nhật ký P0/P1; preview P1 còn chờ xác minh  [WIP][CLAUDE+GPT]
-├─ RULES_DECISIONS.md          # Luật mặc định từng game để chủ duyệt (đã có luật nền tảng)  [WIP][CLAUDE]
+├─ RULES_DECISIONS.md          # Luật mặc định từng game để chủ duyệt (đã có luật nền tảng + Xì Dách)  [WIP][CLAUDE+GPT]
 ├─ ASSETS.md                   # Danh sách ảnh/âm thanh + giấy phép từng cái  [PLAN][GPT]
 ├─ render.yaml                 # Cấu hình deploy server lên Render  [DONE][CLAUDE]
 ├─ SETUP.md                    # Hướng dẫn chủ cài/chạy/deploy, copy-paste được  [DONE][CLAUDE]
@@ -27,7 +27,10 @@ ROOT/
 │     │  ├─ package.json / tsconfig.json  [DONE][GPT]
 │     │  ├─ src/index.ts  [DONE][GPT]
 │     │  └─ tests/bau-cua.test.ts  [DONE][GPT]
-│     ├─ xi-dach/              # Xì dách  [PLAN][CLAUDE]
+│     ├─ xi-dach/              # Xì Dách engine + tests  [DONE][CLAUDE]
+│     │  ├─ package.json / tsconfig.json  [DONE][CLAUDE]
+│     │  ├─ src/index.ts  [DONE][CLAUDE]
+│     │  └─ tests/xi-dach.test.ts  [DONE][CLAUDE]
 │     ├─ bai-cao/              # Bài Cào 3 lá: engine + tests  [DONE][GPT]
 │     │  ├─ package.json / tsconfig.json  [DONE][GPT]
 │     │  ├─ src/index.ts  [DONE][GPT]
@@ -43,7 +46,7 @@ ROOT/
 │        (mỗi thư mục: src/index.ts, src/rules.ts, src/bot.ts, src/rulesText.ts, tests/)
 ├─ apps/
 │  ├─ server/                  # Server Colyseus (realtime)  [DONE][CLAUDE]
-│  │  └─ src/ (rooms/TableRoom.ts = ghế/cái/bot/tạm dừng 15s/kick, rooms/LobbyRoom.ts = chat sảnh, registry.ts = đăng ký engine Bầu Cua + Baccarat + Bài Cào, auth.ts, store.ts = sổ chip (RAM, sẽ thay Supabase), index.ts; tests/rooms.test.ts)  [DONE][GPT]
+│  │  └─ src/ (rooms/TableRoom.ts = ghế/cái/bot/tạm dừng 15s/kick, rooms/LobbyRoom.ts = chat sảnh, registry.ts = đăng ký Bầu Cua, Baccarat, Bài Cào + Xì Dách, auth.ts, store.ts = sổ chip (RAM, sẽ thay Supabase), index.ts; tests/rooms.test.ts + xidach-room.test.ts)  [DONE][GPT+CLAUDE]
 │  └─ web/                     # Giao diện React+Vite+Tailwind (khung mẫu P0, GPT làm đẹp + thêm PixiJS)  [WIP][GPT]
 │     └─ src/
 │        ├─ app/               # Router, layout, theme (desktop đẹp / mobile gọn)
@@ -52,7 +55,8 @@ ROOT/
 │        ├─ games/<id>/        # UI bàn chơi riêng từng game  [DONE][GPT]
 │        │  ├─ bau-cua/BauCuaTable.tsx  [DONE][GPT]
 │        │  ├─ baccarat/BaccaratTable.tsx  [DONE][GPT]
-│        │  └─ bai-cao/BaiCaoTable.tsx  [DONE][GPT]
+│        │  ├─ bai-cao/BaiCaoTable.tsx  [DONE][GPT]
+│        │  └─ xi-dach/XiDachTable.tsx  [DONE][GPT]
 │        ├─ components/        # Lá bài, chip, nút, modal Hướng dẫn dùng chung
 │        ├─ net/               # Kết nối Colyseus, Supabase auth, LiveKit mic
 │        └─ assets/            # Ảnh, âm thanh (ghi giấy phép vào ASSETS.md)

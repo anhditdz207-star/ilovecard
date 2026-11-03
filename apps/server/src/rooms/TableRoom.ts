@@ -262,7 +262,7 @@ export class TableRoom extends Room {
       if (s.isBot || s.botControlled) this.clock.setTimeout(() => this.botMove(seat), T.botMs());
       else {
         humanWaiting = true;
-        this.clock.setTimeout(() => this.botMove(seat), T.turnMs); // timeout => auto action
+        this.clock.setTimeout(() => this.botMove(seat, true), T.turnMs); // timeout => safe default action
       }
     }
     if (humanWaiting) {
@@ -271,9 +271,10 @@ export class TableRoom extends Room {
     }
   }
 
-  private botMove(seat: number) {
+  private botMove(seat: number, timeout = false) {
     if (this.phase !== "playing" || !this.engine.toAct(this.gs).includes(seat)) return;
-    let r = this.engine.apply(this.gs, seat, this.engine.bot(this.gs, seat, this.rng));
+    const act = timeout && this.engine.timeoutAction ? this.engine.timeoutAction(this.gs, seat) : this.engine.bot(this.gs, seat, this.rng);
+    let r = this.engine.apply(this.gs, seat, act);
     if ("error" in r) {
       const legal = this.engine.legalActions(this.gs, seat);
       console.error("[table] bot illegal move:", r.error);

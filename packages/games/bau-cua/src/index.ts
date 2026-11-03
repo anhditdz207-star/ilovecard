@@ -84,6 +84,8 @@ export const bauCuaEngine: GameEngine<BauCuaState, BauCuaAction, BauCuaView> = {
     });
     return settleVsDealer(s.dealer, s.chips[s.dealer] ?? 0, s.chips, results);
   },
+  /** human timeout = pass (no bet), never a random bet */
+  timeoutAction: (s, seat) => (seat === s.dealer ? { type: "roll" } : { type: "bet", bets: {} }),
   bot(s, seat, rng) {
     const legal = this.legalActions(s, seat);
     if (seat === s.dealer) return { type: "roll" };

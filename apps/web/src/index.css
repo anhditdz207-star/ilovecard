@@ -1,3 +1,8 @@
 @import "tailwindcss";
 html, body, #root { height: 100%; }
 body { background: #0b1f17; color: #e8f1ec; font-family: system-ui, sans-serif; }
+@keyframes xi-dach-deal {
+  from { opacity: 0; transform: translateY(-10px) rotate(-3deg) scale(.92); }
+  to { opacity: 1; transform: translateY(0) rotate(0) scale(1); }
+}
+.xidach-card { animation: xi-dach-deal 260ms ease-out both; }

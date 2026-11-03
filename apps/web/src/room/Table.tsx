@@ -8,6 +8,8 @@ import type { BaccaratView } from "@cg/game-baccarat";
 import { BaccaratTable } from "../games/baccarat/BaccaratTable";
 import type { BaiCaoView } from "@cg/game-bai-cao";
 import { BaiCaoTable } from "../games/bai-cao/BaiCaoTable";
+import type { XiDachView } from "@cg/game-xi-dach";
+import { XiDachTable } from "../games/xi-dach/XiDachTable";
 
 /** Generic table shell (room lobby + debug game view). Per-game UIs plug in under src/games/<id>/ (ChatGPT). */
 export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
@@ -39,7 +41,7 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
   const paused = info.phase === "paused" && info.paused;
 
   return (
-    <div className={`mx-auto p-4 ${info?.gameId === "bau-cua" ? "max-w-6xl" : "max-w-3xl"}`}>
+    <div className={`mx-auto p-4 ${info?.gameId === "bau-cua" || info?.gameId === "xi-dach" ? "max-w-6xl" : "max-w-3xl"}`}>
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-xl font-bold">Phòng {info.code} · {info.gameId} · cược {info.baseBet}</h2>
         <div className="flex gap-2">
@@ -81,6 +83,8 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
         <BaccaratTable info={info} data={view.view as BaccaratView} seat={view.seat} toAct={view.toAct} result={result} send={send} />
       ) : info.gameId === "bai-cao" && info.phase !== "lobby" && view ? (
         <BaiCaoTable info={info} data={view.view as BaiCaoView} seat={view.seat} toAct={view.toAct} result={result} send={send} />
+      ) : info.gameId === "xi-dach" && info.phase !== "lobby" && view ? (
+        <XiDachTable info={info} data={view.view as XiDachView} seat={view.seat} toAct={view.toAct} result={result} deadline={view.deadline} send={send} />
       ) : info.phase !== "lobby" && view && (
         <div className="mt-4 rounded-lg bg-black/30 p-3">
           <pre className="overflow-x-auto text-xs">{JSON.stringify(view.view, null, 1)}</pre>

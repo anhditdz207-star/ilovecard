@@ -32,6 +32,9 @@ importers:
       '@cg/game-bai-cao':
         specifier: workspace:*
         version: link:../../packages/games/bai-cao
+      '@cg/game-xi-dach':
+        specifier: workspace:*
+        version: link:../../packages/games/xi-dach
       '@cg/game-demo':
         specifier: workspace:*
         version: link:../../packages/games/demo
@@ -66,6 +69,9 @@ importers:
       '@cg/game-bai-cao':
         specifier: workspace:*
         version: link:../../packages/games/bai-cao
+      '@cg/game-xi-dach':
+        specifier: workspace:*
+        version: link:../../packages/games/xi-dach
       '@cg/game-demo':
         specifier: workspace:*
         version: link:../../packages/games/demo
@@ -114,6 +120,12 @@ importers:
         version: link:../../shared
 
   packages/games/bai-cao:
+    dependencies:
+      '@cg/shared':
+        specifier: workspace:*
+        version: link:../../shared
+
+  packages/games/xi-dach:
     dependencies:
       '@cg/shared':
         specifier: workspace:*
