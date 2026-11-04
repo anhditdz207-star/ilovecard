@@ -290,7 +290,7 @@ export class TableRoom extends Room {
     this.clock.clear();
     const payouts = this.engine.settle(this.gs);
     const sum = payouts.reduce((a, p) => a + p.delta, 0);
-    if (sum !== 0) {
+    if (sum !== 0 && !this.engine.meta.houseBanked) {
       console.error("[table] settle not zero-sum, aborting hand", sum);
       this.phase = "lobby";
       return this.pushRoom();

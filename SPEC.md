@@ -19,12 +19,13 @@ Both AIs MUST follow this file. If a rule is missing, ask the owner once; never 
 ## 2. Game engine contract (packages/games/<id>), pure TS, no I/O, deterministic with injected RNG
 ```ts
 interface GameEngine<S, A, V> {
-  meta: { id: string; name: string; minPlayers: number; maxPlayers: number; hasDealer: boolean; rulesFlags: Record<string, boolean|number> };
+  meta: { houseBanked?: boolean /* virtual house: settle may be non-zero-sum (Baccarat) */; id: string; name: string; minPlayers: number; maxPlayers: number; hasDealer: boolean; rulesFlags: Record<string, boolean|number> };
   init(cfg: {seats: SeatInfo[]; dealerSeat?: number; baseBet: number; rng: RNG; flags: object}): S;
   legalActions(s: S, seat: number): A[];
   apply(s: S, seat: number, a: A): {state: S} | {error: string};
   view(s: S, seat: number): V;                 // hides other seats' hidden info
   toAct(s: S): number[];                          // seats that must act now (room auto-plays bots/timeouts)
+  timeoutAction?(s: S, seat: number): A;           // safe default when a HUMAN times out (pass/stand); else bot() is used
   isOver(s: S): boolean;
   settle(s: S): {seat: number; delta: number}[]; // chips; dealer pays only what it has
   bot(s: S, seat: number, rng: RNG): A;          // must always return a legal action

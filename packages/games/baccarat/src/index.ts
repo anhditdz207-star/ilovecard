@@ -1,7 +1,8 @@
 import { makeDeck, shuffle, type Card, type GameEngine, type Payout, type RNG, type SeatInfo } from "@cg/shared";
 
 export type BaccaratSide = "player" | "banker" | "tie";
-export type BaccaratAction = { type: "bet"; side: BaccaratSide; amount: number };
+export type BaccaratAction = { type: "bet"; side: BaccaratSide; amount: number } | { type: "pass" };
+type Bet = Extract<BaccaratAction, { type: "bet" }>;
 export interface BaccaratHand { player: Card[]; banker: Card[]; winner: BaccaratSide; }
 export interface BaccaratState {
   seats: number[]; chips: Record<number, number>; baseBet: number;
@@ -12,11 +13,11 @@ export interface BaccaratView {
   hand: BaccaratHand | null; outcome: BaccaratSide | null;
 }
 const SIDES: BaccaratSide[] = ["player", "banker", "tie"];
-const RULES = "Mỗi người chọn Player, Banker hoặc Tie và đặt cược. Hai bên được chia hai lá, có thể rút lá thứ ba theo luật Baccarat chuẩn. Điểm tính theo hàng đơn vị (A=1, 2–9 theo số, 10/J/Q/K=0); 8 hoặc 9 tự nhiên thì dừng. Player thắng trả 1:1, Banker thắng trả 0,95:1 (đã trừ hoa hồng 5%), Tie trả 8:1; cược sai mất, hòa thì hoàn cược. Chip thắng được chia trong tổng tiền cược của bàn để ván chơi không tạo hoặc mất chip. Chỉ dùng chip ảo, chơi giải trí, không dùng tiền thật.";
+const RULES = "Mỗi người chọn Player, Banker hoặc Tie và đặt cược. Hai bên được chia hai lá, có thể rút lá thứ ba theo luật Baccarat chuẩn. Điểm tính theo hàng đơn vị (A=1, 2–9 theo số, 10/J/Q/K=0); 8 hoặc 9 tự nhiên thì dừng. Player thắng trả 1:1, Banker thắng trả 0,95:1 (đã trừ hoa hồng 5%), Tie trả 8:1; cược sai mất, hòa thì hoàn cược. Nhà cái ảo trả thưởng nên mọi người cùng thắng được. Có thể bỏ lượt (không cược); hết giờ thì tự bỏ lượt. Chỉ dùng chip ảo, chơi giải trí, không dùng tiền thật.";
 const points = (card: Card) => card.rank >= 10 ? 0 : card.rank;
 const total = (cards: Card[]) => cards.reduce((n, c) => n + points(c), 0) % 10;
 
-function deal(shoe: Card[]): { hand: BaccaratHand; shoe: Card[] } {
+export function deal(shoe: Card[]): { hand: BaccaratHand; shoe: Card[] } {
   const cards = shoe.slice();
   const draw = () => cards.pop()!;
   const player = [draw(), draw()];
@@ -35,29 +36,8 @@ function deal(shoe: Card[]): { hand: BaccaratHand; shoe: Card[] } {
   return { hand: { player, banker, winner: p === b ? "tie" : p > b ? "player" : "banker" }, shoe: cards };
 }
 
-/** Distribute gross outcomes proportionally across the losing side; integer chips always balance. */
-function balance(raw: Record<number, number>, seats: number[]): Payout[] {
-  const sum = seats.reduce((n, seat) => n + raw[seat], 0);
-  if (!sum) return seats.map((seat) => ({ seat, delta: raw[seat] }));
-  const side = sum > 0 ? 1 : -1;
-  const totalWinners = seats.reduce((n, seat) => n + Math.max(0, raw[seat] * side), 0);
-  const totalLosers = seats.reduce((n, seat) => n + Math.max(0, raw[seat] * -side), 0);
-  const source = side > 0 ? 1 : -1;
-  const budget = Math.min(totalWinners, totalLosers);
-  let allocated = 0, cumulative = 0;
-  const results = seats.map((seat) => {
-    const amount = raw[seat];
-    if (amount * source <= 0) return { seat, delta: amount };
-    cumulative += Math.abs(amount);
-    const share = Math.floor(cumulative * budget / totalWinners) - allocated;
-    allocated += share;
-    return { seat, delta: source * share };
-  });
-  return results;
-}
-
 export const baccaratEngine: GameEngine<BaccaratState, BaccaratAction, BaccaratView> = {
-  meta: { id: "baccarat", name: "Baccarat", minPlayers: 1, maxPlayers: 12, hasDealer: false, rulesFlags: {} },
+  meta: { id: "baccarat", name: "Baccarat", minPlayers: 1, maxPlayers: 12, hasDealer: false, rulesFlags: {}, houseBanked: true },
   rulesText: RULES,
   init({ seats, baseBet, rng }: { seats: SeatInfo[]; baseBet: number; rng: RNG }) {
     const chips: Record<number, number> = {}, bets: Record<number, BaccaratAction | null> = {};
@@ -68,11 +48,12 @@ export const baccaratEngine: GameEngine<BaccaratState, BaccaratAction, BaccaratV
   legalActions(s, seat) {
     if (!this.toAct(s).includes(seat)) return [];
     const amount = Math.min(s.baseBet, s.chips[seat] ?? 0);
-    return amount > 0 ? SIDES.map((side) => ({ type: "bet" as const, side, amount })) : [];
+    const acts: BaccaratAction[] = amount > 0 ? SIDES.map((side) => ({ type: "bet" as const, side, amount })) : [];
+    return [...acts, { type: "pass" }];
   },
   apply(s, seat, action) {
     if (!this.toAct(s).includes(seat)) return { error: "Chưa đến lượt" };
-    if (action?.type !== "bet" || !SIDES.includes(action.side) || !Number.isSafeInteger(action.amount) || action.amount < 1 || action.amount > (s.chips[seat] ?? 0)) return { error: "Cược không hợp lệ" };
+    if (action?.type !== "pass" && (action?.type !== "bet" || !SIDES.includes(action.side) || !Number.isSafeInteger(action.amount) || action.amount < 1 || action.amount > (s.chips[seat] ?? 0))) return { error: "Cược không hợp lệ" };
     const bets = { ...s.bets, [seat]: action };
     if (s.seats.some((player) => !bets[player])) return { state: { ...s, bets } };
     const dealt = deal(s.shoe);
@@ -82,13 +63,20 @@ export const baccaratEngine: GameEngine<BaccaratState, BaccaratAction, BaccaratV
   isOver: (s) => s.hand !== null,
   settle(s): Payout[] {
     if (!s.hand) return [];
-    const raw: Record<number, number> = {};
+    const out: Payout[] = [];
     for (const seat of s.seats) {
-      const bet = s.bets[seat]!;
-      raw[seat] = bet.side === s.hand.winner ? Math.floor(bet.amount * (bet.side === "banker" ? 0.95 : bet.side === "tie" ? 8 : 1)) : s.hand.winner === "tie" && bet.side !== "tie" ? 0 : -bet.amount;
+      const bet = s.bets[seat];
+      if (!bet || bet.type !== "bet") continue;
+      let delta: number;
+      if (bet.side === s.hand.winner) delta = Math.floor(bet.amount * (bet.side === "banker" ? 0.95 : bet.side === "tie" ? 8 : 1));
+      else if (s.hand.winner === "tie") delta = 0; // push
+      else delta = -bet.amount;
+      out.push({ seat, delta });
     }
-    return balance(raw, s.seats);
+    return out;
   },
-  bot(s, seat, rng) { const legal = this.legalActions(s, seat); return legal[rng.int(legal.length)]!; },
+  /** human timeout = sit out this hand */
+  timeoutAction: () => ({ type: "pass" }),
+  bot(s, seat, rng) { const bets = this.legalActions(s, seat).filter((x) => x.type === "bet"); return bets.length ? bets[rng.int(bets.length)]! : { type: "pass" }; },
 };
 export { RULES as baccaratRulesText };

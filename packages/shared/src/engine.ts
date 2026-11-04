@@ -13,6 +13,8 @@ export interface EngineMeta {
   minPlayers: number;
   maxPlayers: number;
   hasDealer: boolean;
+  /** true = a virtual house covers wins/losses (e.g. Baccarat). settle() need NOT sum to 0; chips are minted/burned. */
+  houseBanked?: boolean;
   /** default rule flags (variants). Shown to owner in RULES_DECISIONS.md */
   rulesFlags: Record<string, boolean | number>;
 }
@@ -41,7 +43,7 @@ export interface GameEngine<S = any, A = any, V = any> {
   apply(s: S, seat: number, a: A): ApplyResult<S>;
   view(s: S, seat: number): V;
   isOver(s: S): boolean;
-  /** only valid when isOver. Sum of deltas = 0; dealer pays at most the chips it has. */
+  /** only valid when isOver. Sum of deltas = 0 unless meta.houseBanked; dealer pays at most the chips it has. */
   settle(s: S): Payout[];
   /** MUST return a legal action for a seat in toAct(s). */
   bot(s: S, seat: number, rng: RNG): A;
