@@ -10,6 +10,8 @@ import type { BaiCaoView } from "@cg/game-bai-cao";
 import { BaiCaoTable } from "../games/bai-cao/BaiCaoTable";
 import type { XiDachView } from "@cg/game-xi-dach";
 import { XiDachTable } from "../games/xi-dach/XiDachTable";
+import type { TLView } from "@cg/game-tien-len";
+import { TienLenTable } from "../games/tien-len/TienLenTable";
 
 /** Generic table shell (room lobby + debug game view). Per-game UIs plug in under src/games/<id>/ (ChatGPT). */
 export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
@@ -18,9 +20,10 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
   const [view, setView] = useState<S2C["view"] | null>(null);
   const [notices, setNotices] = useState<string[]>([]);
   const [result, setResult] = useState<S2C["result"] | null>(null);
+  const [tableError, setTableError] = useState("");
   const [now, setNow] = useState(Date.now());
   const [showRules, setShowRules] = useState(false);
-  const send = (t: string, extra: object = {}) => room.send("m", { t, ...extra });
+  const send = (t: string, extra: object = {}) => { if (t === "action") setTableError(""); room.send("m", { t, ...extra }); };
 
   useEffect(() => {
     room.onMessage("me", (m: S2C["me"]) => setMySeat(m.seat));
@@ -28,7 +31,7 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
     room.onMessage("view", setView);
     room.onMessage("result", (r) => setResult(r));
     room.onMessage("notice", (n: S2C["notice"]) => setNotices((x) => [...x.slice(-4), n.text]));
-    room.onMessage("error", (e: S2C["error"]) => setNotices((x) => [...x.slice(-4), "⚠ " + e.text]));
+    room.onMessage("error", (e: S2C["error"]) => { setTableError(e.text); setNotices((x) => [...x.slice(-4), "⚠ " + e.text]); });
     room.onMessage("kicked", (k: S2C["kicked"]) => { alert(k.reason); onLeave(); });
     room.onLeave(() => onLeave());
     send("sync");
@@ -41,7 +44,7 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
   const paused = info.phase === "paused" && info.paused;
 
   return (
-    <div className={`mx-auto p-4 ${info?.gameId === "bau-cua" || info?.gameId === "xi-dach" ? "max-w-6xl" : "max-w-3xl"}`}>
+    <div className={`mx-auto p-4 ${["bau-cua", "xi-dach", "tien-len-nam", "tien-len-bac"].includes(info.gameId) ? "max-w-6xl" : "max-w-3xl"}`}>
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-xl font-bold">Phòng {info.code} · {info.gameId} · cược {info.baseBet}</h2>
         <div className="flex gap-2">
@@ -85,6 +88,8 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
         <BaiCaoTable info={info} data={view.view as BaiCaoView} seat={view.seat} toAct={view.toAct} result={result} send={send} />
       ) : info.gameId === "xi-dach" && info.phase !== "lobby" && view ? (
         <XiDachTable info={info} data={view.view as XiDachView} seat={view.seat} toAct={view.toAct} result={result} deadline={view.deadline} send={send} />
+      ) : (info.gameId === "tien-len-nam" || info.gameId === "tien-len-bac") && info.phase !== "lobby" && view ? (
+        <TienLenTable info={info} data={view.view as TLView} seat={view.seat} toAct={view.toAct} result={result} deadline={view.deadline} error={tableError} send={send} />
       ) : info.phase !== "lobby" && view && (
         <div className="mt-4 rounded-lg bg-black/30 p-3">
           <pre className="overflow-x-auto text-xs">{JSON.stringify(view.view, null, 1)}</pre>

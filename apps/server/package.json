@@ -15,6 +15,7 @@
     "@cg/game-baccarat": "workspace:*",
     "@cg/game-bai-cao": "workspace:*",
     "@cg/game-xi-dach": "workspace:*",
+    "@cg/game-tien-len": "workspace:*",
     "@cg/game-demo": "workspace:*",
     "@colyseus/core": "0.16.26",
     "@colyseus/ws-transport": "0.16.5",

@@ -1,7 +1,7 @@
 PROJECT_MAP.txt  --  Sơ đồ cây + chú thích. ĐỌC FILE NÀY ĐẦU TIÊN mỗi lần bắt đầu việc.
 Cập nhật NGAY khi thêm/xoá/đổi tên/đổi vai trò file. Mỗi dòng: đường dẫn  # chú thích  [trạng thái] [chủ: CLAUDE|GPT|OWNER]
 Trạng thái: PLAN = chưa làm | WIP = đang làm | DONE = xong có test
-Cập nhật lần cuối: 2026-11-03 GPT (Xì Dách integration)
+Cập nhật lần cuối: 2026-11-04 GPT (Tiến Lên integration)
 
 ROOT/
 ├─ SPEC.md                     # Luật dự án, stack, hợp đồng engine, giai đoạn. Nguồn sự thật duy nhất  [DONE][CLAUDE]
@@ -40,13 +40,15 @@ ROOT/
 │     │  ├─ package.json / tsconfig.json  [DONE][GPT]
 │     │  ├─ src/index.ts  [DONE][GPT]
 │     │  └─ tests/baccarat.test.ts  [DONE][GPT]
-│     ├─ tien-len-nam/         # Tiến lên miền Nam  [PLAN][CLAUDE]
-│     ├─ tien-len-bac/         # Tiến lên miền Bắc  [PLAN][CLAUDE]
+│     ├─ tien-len/             # Tiến lên Nam+Bắc, 1 engine 2 bộ cờ luật  [DONE][CLAUDE]
+│     │  ├─ package.json / tsconfig.json  [DONE][CLAUDE]
+│     │  ├─ src/index.ts  [DONE][CLAUDE]
+│     │  └─ tests/tien-len.test.ts  [DONE][CLAUDE]
 │     └─ poker/                # Texas Hold'em (dùng pokersolver)  [PLAN][CLAUDE]
 │        (mỗi thư mục: src/index.ts, src/rules.ts, src/bot.ts, src/rulesText.ts, tests/)
 ├─ apps/
 │  ├─ server/                  # Server Colyseus (realtime)  [DONE][CLAUDE]
-│  │  └─ src/ (rooms/TableRoom.ts = ghế/cái/bot/tạm dừng 15s/kick, rooms/LobbyRoom.ts = chat sảnh, registry.ts = đăng ký Bầu Cua, Baccarat, Bài Cào + Xì Dách, auth.ts, store.ts = sổ chip (RAM, sẽ thay Supabase), index.ts; tests/rooms.test.ts + xidach-room.test.ts)  [DONE][GPT+CLAUDE]
+│  │  └─ src/ (rooms/TableRoom.ts = ghế/cái/bot/tạm dừng 15s/kick, rooms/LobbyRoom.ts = chat sảnh, registry.ts = đăng ký các engine, auth.ts, store.ts = sổ chip (RAM, sẽ thay Supabase), index.ts; tests/rooms.test.ts + xidach-room.test.ts + tienlen-room.test.ts)  [DONE][GPT+CLAUDE]
 │  └─ web/                     # Giao diện React+Vite+Tailwind (khung mẫu P0, GPT làm đẹp + thêm PixiJS)  [WIP][GPT]
 │     └─ src/
 │        ├─ app/               # Router, layout, theme (desktop đẹp / mobile gọn)
@@ -56,7 +58,8 @@ ROOT/
 │        │  ├─ bau-cua/BauCuaTable.tsx  [DONE][GPT]
 │        │  ├─ baccarat/BaccaratTable.tsx  [DONE][GPT]
 │        │  ├─ bai-cao/BaiCaoTable.tsx  [DONE][GPT]
-│        │  └─ xi-dach/XiDachTable.tsx  [DONE][GPT]
+│        │  ├─ xi-dach/XiDachTable.tsx  [DONE][GPT]
+│        │  └─ tien-len/TienLenTable.tsx  [DONE][GPT]
 │        ├─ components/        # Lá bài, chip, nút, modal Hướng dẫn dùng chung
 │        ├─ net/               # Kết nối Colyseus, Supabase auth, LiveKit mic
 │        └─ assets/            # Ảnh, âm thanh (ghi giấy phép vào ASSETS.md)

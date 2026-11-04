@@ -4,6 +4,7 @@ import { bauCuaEngine } from "@cg/game-bau-cua";
 import { baccaratEngine } from "@cg/game-baccarat";
 import { baiCaoEngine } from "@cg/game-bai-cao";
 import { xiDachEngine } from "@cg/game-xi-dach";
+import { tienLenNamEngine, tienLenBacEngine } from "@cg/game-tien-len";
 
 /** Register every finished game engine here. */
 export const engines: Partial<Record<GameId, GameEngine>> = {
@@ -12,4 +13,6 @@ export const engines: Partial<Record<GameId, GameEngine>> = {
   baccarat: baccaratEngine,
   "bai-cao": baiCaoEngine,
   "xi-dach": xiDachEngine,
+  "tien-len-nam": tienLenNamEngine,
+  "tien-len-bac": tienLenBacEngine,
 };

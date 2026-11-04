@@ -35,6 +35,9 @@ importers:
       '@cg/game-xi-dach':
         specifier: workspace:*
         version: link:../../packages/games/xi-dach
+      '@cg/game-tien-len':
+        specifier: workspace:*
+        version: link:../../packages/games/tien-len
       '@cg/game-demo':
         specifier: workspace:*
         version: link:../../packages/games/demo
@@ -72,6 +75,9 @@ importers:
       '@cg/game-xi-dach':
         specifier: workspace:*
         version: link:../../packages/games/xi-dach
+      '@cg/game-tien-len':
+        specifier: workspace:*
+        version: link:../../packages/games/tien-len
       '@cg/game-demo':
         specifier: workspace:*
         version: link:../../packages/games/demo
@@ -126,6 +132,12 @@ importers:
         version: link:../../shared
 
   packages/games/xi-dach:
+    dependencies:
+      '@cg/shared':
+        specifier: workspace:*
+        version: link:../../shared
+
+  packages/games/tien-len:
     dependencies:
       '@cg/shared':
         specifier: workspace:*

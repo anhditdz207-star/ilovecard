@@ -4,8 +4,9 @@ import { bauCuaRulesText } from "@cg/game-bau-cua";
 import { baccaratRulesText } from "@cg/game-baccarat";
 import { baiCaoRulesText } from "@cg/game-bai-cao";
 import { xiDachEngine } from "@cg/game-xi-dach";
+import { tienLenNamRules, tienLenBacRules } from "@cg/game-tien-len";
 
-const RULES: Partial<Record<GameId, string>> = { demo: demoEngine.rulesText, "bau-cua": bauCuaRulesText, baccarat: baccaratRulesText, "bai-cao": baiCaoRulesText, "xi-dach": xiDachEngine.rulesText };
+const RULES: Partial<Record<GameId, string>> = { demo: demoEngine.rulesText, "bau-cua": bauCuaRulesText, baccarat: baccaratRulesText, "bai-cao": baiCaoRulesText, "xi-dach": xiDachEngine.rulesText, "tien-len-nam": tienLenNamRules, "tien-len-bac": tienLenBacRules };
 
 export function rulesFor(id: GameId) {
   return RULES[id] ?? "Luật chơi đang được cập nhật.";
