@@ -1,6 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { RoomInfo, S2C } from "@cg/shared";
 import { TILES, type BauCuaAction, type BauCuaView, type Bets, type Tile } from "@cg/game-bau-cua";
+import { ChipStack } from "../../components/ChipStack";
+import { useGameSounds } from "../../hooks/useGameSounds";
 
 const TILE_INFO: Record<Tile, { name: string; icon: string; color: string }> = {
   bau: { name: "Bầu", icon: "🎃", color: "from-orange-400 to-amber-700" },
@@ -16,6 +18,8 @@ export function BauCuaTable({ info, data, seat, toAct, result, send }: {
   result: S2C["result"] | null; send: (type: string, extra?: object) => void;
 }) {
   const [draft, setDraft] = useState<Bets>({});
+  const sounds = useGameSounds();
+  useEffect(() => { if (data.phase === "over") sounds.win(); }, [data.phase]);
   const mine = info.seats[seat];
   const acting = toAct.includes(seat);
   const isDealer = seat === data.dealer;
@@ -23,26 +27,27 @@ export function BauCuaTable({ info, data, seat, toAct, result, send }: {
   const update = (tile: Tile, amount: number) => setDraft((current) => ({ ...current, [tile]: Math.max(0, Math.floor(amount)) }));
   const placeBets = () => {
     const bets = Object.fromEntries(TILES.filter((tile) => (draft[tile] ?? 0) > 0).map((tile) => [tile, draft[tile]])) as Bets;
+    sounds.chip();
     send("action", { a: { type: "bet", bets } satisfies BauCuaAction });
   };
-  const roll = () => send("action", { a: { type: "roll" } satisfies BauCuaAction });
+  const roll = () => { sounds.card(); send("action", { a: { type: "roll" } satisfies BauCuaAction }); };
   const diceCounts = TILES.map((tile) => data.dice?.filter((die) => die === tile).length ?? 0);
   const minePayout = result?.payouts.find((p) => p.seat === seat)?.delta;
 
   return (
-    <main className="relative overflow-hidden rounded-[2rem] border border-amber-200/15 bg-[radial-gradient(ellipse_at_center,_#176348_0%,_#0b382b_56%,_#071e17_100%)] p-4 shadow-2xl sm:p-8">
+    <main className="cg-table p-4 sm:p-8">
       <div className="pointer-events-none absolute inset-0 opacity-20 [background-image:radial-gradient(#d7ba6b_0.55px,transparent_0.55px)] [background-size:12px_12px]" />
       <div className="relative mx-auto max-w-5xl">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div><p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-200/70">Bầu Cua · Phòng {info.code}</p><h2 className="text-2xl font-black sm:text-3xl">Bàn hội xuân</h2></div>
-          <div className="rounded-full border border-amber-200/20 bg-black/20 px-4 py-2 text-sm text-amber-100">Cược bàn <b className="ml-1 text-white">{info.baseBet.toLocaleString()} chip</b></div>
+          <ChipStack value={info.baseBet} label="Cược bàn" />
         </div>
 
         <div className="mb-6 flex min-h-24 flex-wrap items-center justify-center gap-3 rounded-3xl border border-white/10 bg-black/15 p-4">
           {info.seats.map((player, index) => player && <div key={player.id} className={`min-w-28 rounded-2xl border px-3 py-2 text-center ${index === data.dealer ? "border-amber-200/50 bg-amber-300/10" : "border-white/10 bg-black/15"}`}>
             <div className="text-xs text-emerald-100/60">{index === data.dealer ? "🏦 Nhà cái" : player.isBot ? "🤖 Máy" : "Người chơi"}</div>
             <div className="font-bold">{player.name}{index === seat ? " · Bạn" : ""}</div>
-            <div className="text-xs text-amber-100/80">{player.chips.toLocaleString()} chip</div>
+            <ChipStack value={player.chips} label="Chip" compact />
             {data.submitted.includes(index) && <div className="text-[10px] text-emerald-200">Đã đặt cược</div>}
           </div>)}
         </div>
@@ -59,7 +64,7 @@ export function BauCuaTable({ info, data, seat, toAct, result, send }: {
                 <div className="min-w-0 flex-1"><h3 className="text-lg font-extrabold">{item.name}</h3><div className="text-xs text-emerald-100/60">{data.phase === "over" ? `${count} mặt xuất hiện` : "Đặt chip vào cửa này"}</div></div>
                 {count > 0 && <span className="animate-bounce rounded-full bg-amber-300 px-2.5 py-1 text-sm font-black text-emerald-950">×{count}</span>}
               </div>
-              <div className="mt-3 rounded-xl bg-black/20 px-3 py-2 text-sm">Cược của bạn: <b className="text-amber-100">{ownBet.toLocaleString()}</b></div>
+              <div className="mt-3"><ChipStack value={ownBet} label="Cược của bạn" compact /></div>
               {acting && !isDealer && <div className="mt-3 flex items-center gap-2">
                 <button aria-label={`Giảm cược ${item.name}`} className="grid size-9 place-items-center rounded-lg bg-white/10 text-lg hover:bg-white/20" onClick={() => update(tile, (draft[tile] ?? 0) - info.baseBet)}>−</button>
                 <input aria-label={`Mức cược ${item.name}`} className="min-w-0 flex-1 rounded-lg border border-white/10 bg-black/25 px-2 py-2 text-center text-sm" type="number" min="0" step={info.baseBet} value={draft[tile] ?? 0} onChange={(e) => update(tile, Number(e.target.value))} />

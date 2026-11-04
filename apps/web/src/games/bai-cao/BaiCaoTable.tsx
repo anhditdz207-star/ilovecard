@@ -1,30 +1,31 @@
-import type { Card, RoomInfo, S2C } from "@cg/shared";
+import type { Card as GameCard, RoomInfo, S2C } from "@cg/shared";
 import { baiCaoPoints, isBaTay, type BaiCaoView } from "@cg/game-bai-cao";
+import { Card } from "../../components/Card";
+import { ChipStack } from "../../components/ChipStack";
+import { useGameSounds } from "../../hooks/useGameSounds";
 
-const suits: Record<string, string> = { S: "♠", C: "♣", D: "♦", H: "♥" };
-const rank: Record<number, string> = { 1: "A", 11: "J", 12: "Q", 13: "K" };
-const label = (card: Card) => `${rank[card.rank] ?? card.rank}${suits[card.suit]}`;
-function handName(cards: Card[]) { return isBaTay(cards) ? "Ba Tây" : `${baiCaoPoints(cards)} điểm`; }
+function handName(cards: GameCard[]) { return isBaTay(cards) ? "Ba Tây" : `${baiCaoPoints(cards)} điểm`; }
 
 export function BaiCaoTable({ info, data, seat, toAct, result, send }: {
   info: RoomInfo; data: BaiCaoView; seat: number; toAct: number[]; result: S2C["result"] | null; send: (t: string, extra?: object) => void;
 }) {
   const waiting = toAct.includes(seat);
-  return <section className="mt-4 space-y-4 rounded-2xl bg-emerald-950 p-5 ring-1 ring-emerald-500/40">
-    <header className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="text-xl font-bold">Bài Cào</h3><p className="text-sm text-emerald-200/70">Ba lá · cược {info.baseBet.toLocaleString()} chip</p></div><span className="rounded-full bg-black/30 px-3 py-1 text-xs">{data.revealed.length}/{info.seats.filter(Boolean).length} đã lật</span></header>
+  const sounds = useGameSounds();
+  return <section className="cg-table mt-4 space-y-4 p-4 sm:p-6">
+    <header className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="text-xl font-bold">Bài Cào</h3><p className="text-sm text-emerald-200/70">Ba lá · so với nhà cái</p></div><div className="flex items-center gap-3"><ChipStack value={info.baseBet} label="Cược bàn" compact /><span className="rounded-full bg-black/30 px-3 py-1 text-xs">{data.revealed.length}/{info.seats.filter(Boolean).length} đã lật</span></div></header>
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {!data.revealed.includes(seat) && data.hands[seat] && <div className="rounded-xl bg-emerald-900/80 p-4 ring-1 ring-amber-400/40"><div className="mb-3 flex justify-between text-sm"><b>Bài của bạn</b><span>{handName(data.hands[seat]!)}</span></div><div className="flex gap-2">{data.hands[seat]!.map((card, i) => <div key={i} className={`grid h-16 w-12 place-items-center rounded-md bg-white text-xl font-bold shadow ${card.suit === "D" || card.suit === "H" ? "text-red-600" : "text-slate-900"}`}>{label(card)}</div>)}</div></div>}
+      {!data.revealed.includes(seat) && data.hands[seat] && <div className="cg-panel border-amber-200/40 p-4"><div className="mb-3 flex justify-between text-sm"><b>Bài của bạn</b><span>{handName(data.hands[seat]!)}</span></div><div className="flex gap-2">{data.hands[seat]!.map((card, index) => <Card key={`${card.rank}${card.suit}`} card={card} delay={index * 65} />)}</div></div>}
       {data.revealed.map((player) => {
         const cards = data.hands[player] ?? [];
         const name = info.seats[player]?.name ?? `Ghế ${player}`;
-        return <div key={player} className={`rounded-xl p-4 ${player === data.dealer ? "bg-amber-900/40 ring-1 ring-amber-400/40" : "bg-emerald-900/80"}`}>
+        return <div key={player} className={`cg-panel p-4 ${player === data.dealer ? "border-amber-200/40 bg-amber-900/20" : ""}`}>
           <div className="mb-3 flex justify-between text-sm"><b>{name}{player === data.dealer ? " · Nhà cái" : ""}</b><span>{handName(cards)}</span></div>
-          <div className="flex gap-2">{cards.map((card, i) => <div key={i} className={`grid h-16 w-12 place-items-center rounded-md bg-white text-xl font-bold shadow ${card.suit === "D" || card.suit === "H" ? "text-red-600" : "text-slate-900"}`}>{label(card)}</div>)}</div>
+          <div className="flex gap-2">{cards.map((card, index) => <Card key={`${card.rank}${card.suit}`} card={card} delay={index * 65} />)}</div>
         </div>;
       })}
-      {info.seats.map((player, index) => player && index !== seat && !data.revealed.includes(index) && <div key={index} className="rounded-xl bg-emerald-900/40 p-4 text-sm text-emerald-200/70">{player.name}: úp bài</div>)}
+      {info.seats.map((player, index) => player && index !== seat && !data.revealed.includes(index) && <div key={index} className="cg-panel p-4 text-sm text-emerald-200/70"><div className="mb-3">{player.name}: úp bài</div><div className="flex gap-2">{[0, 1, 2].map((n) => <Card key={n} hidden size="sm" delay={n * 65} />)}</div></div>)}
     </div>
-    {waiting ? <button className="rounded bg-amber-400 px-4 py-2 font-bold text-emerald-950" onClick={() => send("action", { a: { type: "reveal" } })}>Lật bài của bạn</button> : !data.over && <p className="text-sm text-emerald-200">Đang chờ người chơi lật bài…</p>}
-    {data.over && result && <p className="rounded-lg bg-black/25 p-3 text-center text-sm">{result.payouts.map((p) => p.seat === seat ? `Kết quả: ${p.delta > 0 ? `+${p.delta}` : p.delta} chip` : null).filter(Boolean)}</p>}
+    {waiting ? <button className="cg-button-primary" onClick={() => { sounds.card(); send("action", { a: { type: "reveal" } }); }}>Lật bài của bạn</button> : !data.over && <p className="text-sm text-emerald-200">Đang chờ người chơi lật bài…</p>}
+    {data.over && <div className="cg-panel p-3 text-center text-sm">{result ? result.payouts.map((p) => p.seat === seat ? <ChipStack key={p.seat} value={p.delta} label="Kết quả" compact /> : null) : "Đang chốt chip…"}</div>}
   </section>;
 }

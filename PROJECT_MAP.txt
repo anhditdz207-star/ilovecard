@@ -10,7 +10,7 @@ ROOT/
 ├─ HANDOFF.md                  # Ghi chú giao việc giữa 2 AI, thêm mới ở trên cùng, <=5 dòng/mục  [DONE][CLAUDE+GPT]
 ├─ CHANGELOG.md                # Nhật ký P0/P1; preview P1 còn chờ xác minh  [WIP][CLAUDE+GPT]
 ├─ RULES_DECISIONS.md          # Luật mặc định từng game để chủ duyệt (đã có luật nền tảng + Xì Dách)  [WIP][CLAUDE+GPT]
-├─ ASSETS.md                   # Danh sách ảnh/âm thanh + giấy phép từng cái  [PLAN][GPT]
+├─ ASSETS.md                   # Nguồn asset và giấy phép (UI hiện dùng CSS/Web Audio, không asset ngoài)  [DONE][GPT]
 ├─ render.yaml                 # Cấu hình deploy server lên Render  [DONE][CLAUDE]
 ├─ SETUP.md                    # Hướng dẫn chủ cài/chạy/deploy, copy-paste được  [DONE][CLAUDE]
 ├─ README.md                   # Giới thiệu ngắn  [DONE][CLAUDE]
@@ -51,6 +51,7 @@ ROOT/
 │  │  └─ src/ (rooms/TableRoom.ts = ghế/cái/bot/tạm dừng 15s/kick, rooms/LobbyRoom.ts = chat sảnh, registry.ts = đăng ký các engine, auth.ts, store.ts = sổ chip (RAM, sẽ thay Supabase), index.ts; tests/rooms.test.ts + xidach-room.test.ts + tienlen-room.test.ts)  [DONE][GPT+CLAUDE]
 │  └─ web/                     # Giao diện React+Vite+Tailwind (khung mẫu P0, GPT làm đẹp + thêm PixiJS)  [WIP][GPT]
 │     └─ src/
+│        ├─ index.css          # Theme tokens, lá/chip, animation, responsive landscape  [DONE][GPT]
 │        ├─ app/               # Router, layout, theme (desktop đẹp / mobile gọn)
 │        ├─ lobby/             # Sảnh: chọn game, bạn bè, chat, tạo/vào phòng, nút Hướng dẫn
 │        ├─ room/              # Phòng chờ: chọn cái, thêm bot, mời, bắt đầu
@@ -60,7 +61,8 @@ ROOT/
 │        │  ├─ bai-cao/BaiCaoTable.tsx  [DONE][GPT]
 │        │  ├─ xi-dach/XiDachTable.tsx  [DONE][GPT]
 │        │  └─ tien-len/TienLenTable.tsx  [DONE][GPT]
-│        ├─ components/        # Lá bài, chip, nút, modal Hướng dẫn dùng chung
+│        ├─ components/        # Card.tsx + ChipStack.tsx dùng chung, RulesModal.tsx  [DONE][GPT]
+│        ├─ hooks/useGameSounds.ts  # Âm thanh procedural Web Audio  [DONE][GPT]
 │        ├─ net/               # Kết nối Colyseus, Supabase auth, LiveKit mic
 │        └─ assets/            # Ảnh, âm thanh (ghi giấy phép vào ASSETS.md)
 └─ docs/ (tuỳ chọn)            # Tài liệu bổ sung
