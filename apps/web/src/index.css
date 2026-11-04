@@ -1,4 +1,4 @@
-import "tailwindcss";
+@import "tailwindcss";
 :root { --cg-felt: #0b382b; --cg-felt-dark: #071e17; --cg-panel: #103f31; --cg-gold: #f4c65b; --cg-ink: #10251d; }
 html, body, #root { min-height: 100%; }
 body { margin: 0; background: var(--cg-felt-dark); color: #e8f1ec; font-family: system-ui, sans-serif; }
