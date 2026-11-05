@@ -63,7 +63,10 @@ ROOT/
 │        │  ├─ bai-cao-to/BaiCaoToTable.tsx  [DONE][GPT]
 │        │  ├─ xi-dach/XiDachTable.tsx  [DONE][GPT]
 │        │  └─ tien-len/TienLenTable.tsx  [DONE][GPT]
-│        ├─ components/        # Card.tsx + ChipStack.tsx dùng chung, RulesModal.tsx  [DONE][GPT]
+│        ├─ components/        # Cầu nối component dùng chung, ChipStack.tsx và RulesModal.tsx  [DONE][GPT]
+│        ├─ ui/                # Design kit components + responsive seat placement  [DONE][GPT]
+│        │  ├─ Card.tsx / Chip.tsx / Avatar.tsx / TableFelt.tsx  # SVG cards and table primitives  [DONE][GPT]
+│        │  ├─ Button.tsx / Toast.tsx / Modal.tsx / seats.ts / index.ts  # Interaction primitives + layout utility  [DONE][GPT]
 │        ├─ hooks/useGameSounds.ts  # Âm thanh procedural Web Audio  [DONE][GPT]
 │        ├─ net/               # Kết nối Colyseus, Supabase auth, LiveKit mic
 │        └─ assets/            # Ảnh, âm thanh (ghi giấy phép vào ASSETS.md)
