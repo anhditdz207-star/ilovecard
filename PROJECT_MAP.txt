@@ -64,7 +64,7 @@ ROOT/
 │        │  ├─ xi-dach/XiDachTable.tsx  [DONE][GPT]
 │        │  └─ tien-len/TienLenTable.tsx  [DONE][GPT]
 │        ├─ components/        # Cầu nối component dùng chung, ChipStack.tsx và RulesModal.tsx  [DONE][GPT]
-│        ├─ ui/                # Design kit components + responsive seat placement  [DONE][GPT]
+│        ├─ ui/                # Design kit + canvas win particles + responsive seat placement  [DONE][GPT]
 │        │  ├─ Card.tsx / Chip.tsx / Avatar.tsx / TableFelt.tsx  # SVG cards and table primitives  [DONE][GPT]
 │        │  ├─ Button.tsx / Toast.tsx / Modal.tsx / seats.ts / index.ts  # Interaction primitives + layout utility  [DONE][GPT]
 │        ├─ audio/                # Tổng hợp SFX/nhạc nền Web Audio + bảng chỉnh âm lượng  [DONE][GPT]

@@ -4,6 +4,7 @@ import { analyze, beats, type TLView } from "@cg/game-tien-len";
 import { Card } from "../../components/Card";
 import { ChipStack } from "../../components/ChipStack";
 import { useGameSounds } from "../../hooks/useGameSounds";
+import { motion } from "framer-motion";
 
 const cardId = (card: GameCard) => `${card.rank}${card.suit}`;
 const whiteNames = { rong: "Sảnh rồng", tuQuyHeo: "Tứ quý heo", sauDoi: "6 đôi" } as const;
@@ -65,10 +66,10 @@ export function TienLenTable({ info, data, seat, toAct, result, send, error, dea
         })}
       </div>
 
-      <section key={data.lead ? `${data.lead.seat}-${data.lead.cards.map(cardId).join("-")}` : data.white ? "white" : "empty"} className={`cg-play-area cg-panel my-4 min-h-36 p-4 sm:p-6 ${chopFlash ? "cg-chop-flash" : ""} ${data.over ? "cg-win" : ""}`}>
+      <motion.section key={data.lead ? `${data.lead.seat}-${data.lead.cards.map(cardId).join("-")}` : data.white ? "white" : "empty"} initial={{ opacity: 0, y: -18, scale: .97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: .28, ease: "easeOut" }} className={`cg-play-area cg-panel my-4 min-h-36 p-4 sm:p-6 ${chopFlash ? "cg-chop-flash" : ""} ${data.over ? "cg-win" : ""}`}>
         <div className="mb-3 text-center text-xs uppercase tracking-[0.2em] text-emerald-100/50">Bài trên bàn</div>
         {data.white ? <div className="py-5 text-center text-2xl font-black text-amber-200">Tới trắng! · {whiteNames[data.white.kind]} · {info.seats[data.white.seat]?.name}</div> : data.lead ? <div className="flex flex-wrap items-center justify-center gap-2"><div className="w-full text-center text-sm text-emerald-100/70">{info.seats[data.lead.seat]?.name} đánh {data.lead.type}</div>{data.lead.cards.map((card, index) => <Card key={cardId(card)} card={card} size="md" delay={index * 35} />)}</div> : <p className="py-7 text-center text-sm text-emerald-100/50">Chưa có bộ bài nào · người tới lượt được đi đầu</p>}
-      </section>
+      </motion.section>
 
       {data.over && <div className="cg-win mb-4 rounded-2xl bg-amber-300/10 p-3 text-center font-bold text-amber-100">Ván đã kết thúc{result ? " · Chip đã chốt" : " · Đang chốt chip…"}</div>}
       {!data.over && <section className="cg-hand-tray border border-white/10 bg-emerald-950/90 p-3 sm:p-5 lg:static">

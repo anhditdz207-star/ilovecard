@@ -72,6 +72,7 @@ body { margin: 0; background: var(--cg-felt-dark); color: #e8f1ec; font-family: 
 .cg-pass-pulse { animation: cg-pass .28s ease-out both; }
 .cg-chop-flash { animation: cg-chop .5s ease-out both; }
 .cg-win { animation: cg-win .5s ease-out both; }
+.cg-win-particles { position: fixed; z-index: 70; inset: 0; width: 100vw; height: 100dvh; pointer-events: none; }
 .cg-hand-tray { position: sticky; bottom: .35rem; z-index: 10; border-radius: 1rem; background: linear-gradient(180deg, rgb(7 30 23 / 72%), #071e17 35%); backdrop-filter: blur(10px); }
 @keyframes cg-card-deal { from { opacity: 0; transform: translateY(-.6rem) rotate(-3deg) scale(.92); } to { opacity: 1; transform: translateY(0) rotate(0) scale(1); } }
 @keyframes cg-card-flip { from { opacity: .45; transform: rotateY(80deg); } to { opacity: 1; transform: rotateY(0); } }

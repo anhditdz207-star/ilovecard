@@ -1,4 +1,5 @@
 import type { Card as PlayingCard } from "@cg/shared";
+import { motion } from "framer-motion";
 
 const rankLabel = (rank: number) => ({ 1: "A", 11: "J", 12: "Q", 13: "K" })[rank] ?? String(rank);
 const suitLabel = { S: "♠", C: "♣", D: "♦", H: "♥" } as const;
@@ -18,5 +19,6 @@ export function Card({ card, hidden = false, faceDown = false, selected = false,
     {pips ? <g className="cg-svg-pips">{pips}</g> : <g className="cg-svg-court"><rect x="28" y="38" width="44" height="64" rx="5" fill="#f3ead6" stroke="currentColor" strokeWidth="2"/><path d="M50 40 66 70 50 100 34 70Z" fill="#fff" stroke="currentColor" strokeWidth="2"/><circle cx="50" cy="57" r="7" fill="#d5aa53"/><path d="M38 86q12-16 24 0v8H38Z" fill="#173b31"/><text x="50" y="124" textAnchor="middle">{rank}</text></g>}
   </svg>;
   const label = down ? "Lá bài úp" : `${rank} ${suit}`;
-  return onClick ? <button type="button" aria-label={label} aria-pressed={selected} disabled={disabled} className={classes} style={{ animationDelay: `${delay}ms` }} onClick={onClick}>{content}</button> : <div role="img" aria-label={label} className={classes} style={{ animationDelay: `${delay}ms` }}>{content}</div>;
+  const motionProps = { initial: { opacity: 0, y: -18, rotate: -4, rotateY: down ? 0 : 65 }, animate: { opacity: 1, y: selected ? -9 : 0, rotate: 0, rotateY: 0 }, transition: { type: "spring" as const, stiffness: 280, damping: 22, delay: delay / 1000 } };
+  return onClick ? <motion.button {...motionProps} type="button" aria-label={label} aria-pressed={selected} disabled={disabled} className={classes} onClick={onClick} whileTap={{ scale: .96 }}>{content}</motion.button> : <motion.div {...motionProps} role="img" aria-label={label} className={classes}>{content}</motion.div>;
 }

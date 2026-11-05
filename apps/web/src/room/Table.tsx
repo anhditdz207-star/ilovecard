@@ -16,6 +16,7 @@ import type { TLView } from "@cg/game-tien-len";
 import { TienLenTable } from "../games/tien-len/TienLenTable";
 import { SoundSettings } from "../audio/SoundSettings";
 import { vibrate } from "../audio/sound";
+import { WinParticles } from "../ui/WinParticles";
 
 /** Generic table shell (room lobby + debug game view). Per-game UIs plug in under src/games/<id>/ (ChatGPT). */
 export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
@@ -56,7 +57,8 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
   const paused = info.phase === "paused" && info.paused;
 
   return (
-    <div className={`mx-auto p-4 ${["bau-cua", "xi-dach", "tien-len-nam", "tien-len-bac", "bai-cao-to"].includes(info.gameId) ? "max-w-6xl" : "max-w-3xl"}`}>
+    <div className={`relative mx-auto p-4 ${["bau-cua", "xi-dach", "tien-len-nam", "tien-len-bac", "bai-cao-to"].includes(info.gameId) ? "max-w-6xl" : "max-w-3xl"}`}>
+      <WinParticles trigger={result?.payouts.map((p) => `${p.seat}:${p.delta}`).join(",")} />
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-xl font-bold">Phòng {info.code} · {info.gameId} · cược {info.baseBet}</h2>
         <div className="flex gap-2">

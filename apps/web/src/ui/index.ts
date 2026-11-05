@@ -5,4 +5,5 @@ export { Chip } from "./Chip";
 export { Modal } from "./Modal";
 export { TableFelt } from "./TableFelt";
 export { Toast } from "./Toast";
+export { WinParticles } from "./WinParticles";
 export { layoutSeats } from "./seats";

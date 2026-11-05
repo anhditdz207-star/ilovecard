@@ -10,15 +10,16 @@
     "typecheck": "tsc -p ."
   },
   "dependencies": {
-    "@cg/shared": "workspace:*",
-    "@cg/game-bau-cua": "workspace:*",
     "@cg/game-baccarat": "workspace:*",
     "@cg/game-bai-cao": "workspace:*",
     "@cg/game-bai-cao-to": "workspace:*",
-    "@cg/game-xi-dach": "workspace:*",
-    "@cg/game-tien-len": "workspace:*",
+    "@cg/game-bau-cua": "workspace:*",
     "@cg/game-demo": "workspace:*",
+    "@cg/game-tien-len": "workspace:*",
+    "@cg/game-xi-dach": "workspace:*",
+    "@cg/shared": "workspace:*",
     "colyseus.js": "0.16.22",
+    "framer-motion": "^14.9.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
