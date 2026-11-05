@@ -1,7 +1,9 @@
 @import "tailwindcss";
 :root { --cg-felt: #0b382b; --cg-felt-dark: #071e17; --cg-panel: #103f31; --cg-gold: #f4c65b; --cg-ink: #10251d; }
 html, body, #root { min-height: 100%; }
-body { margin: 0; background: var(--cg-felt-dark); color: #e8f1ec; font-family: system-ui, sans-serif; }
+html { min-height: 100svh; overscroll-behavior: none; }
+body { min-height: 100svh; margin: 0; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); background: var(--cg-felt-dark); color: #e8f1ec; font-family: system-ui, sans-serif; overscroll-behavior: none; touch-action: manipulation; }
+button:not(.cg-card) { min-height: 44px; touch-action: manipulation; }
 .cg-table { position: relative; overflow: hidden; border: 9px solid #63401f; border-radius: 2rem; background: radial-gradient(ellipse at center, #176348 0%, var(--cg-felt) 56%, var(--cg-felt-dark) 100%); box-shadow: inset 0 0 0 2px #d3a64c, inset 0 0 46px #04180f, 0 24px 70px rgb(0 0 0 / 28%); }
 .cg-panel { border: 1px solid rgb(255 255 255 / 9%); border-radius: 1.25rem; background: rgb(0 0 0 / 17%); }
 .cg-button-primary { border-radius: .85rem; background: linear-gradient(#ffda78, var(--cg-gold)); padding: .7rem 1.1rem; color: var(--cg-ink); font-weight: 800; transition: filter .18s, transform .18s; }
@@ -94,10 +96,13 @@ body { margin: 0; background: var(--cg-felt-dark); color: #e8f1ec; font-family: 
 @keyframes cg-chop { 0%,100% { box-shadow: 0 0 0 transparent; } 35% { box-shadow: 0 0 28px rgb(255 218 120 / 70%); border-color: var(--cg-gold); } }
 @keyframes cg-win { 0%,100% { transform: scale(1); } 40% { transform: scale(1.035); box-shadow: 0 0 35px rgb(255 218 120 / 45%); } }
 @media (orientation: landscape) and (max-height: 520px) {
+  body { padding-block: max(env(safe-area-inset-top), .2rem) max(env(safe-area-inset-bottom), .2rem); }
+  .cg-table { border-width: 5px; border-radius: 1.25rem; }
   .cg-card--md { --cg-card-w: 2.9rem; --cg-card-h: 4.15rem; }
   .cg-card--lg { --cg-card-w: 3.5rem; --cg-card-h: 5rem; }
   .cg-hand-tray { bottom: 0; padding-block: .25rem; }
 }
+@media (orientation: portrait) and (max-width: 767px) { .cg-table { border-radius: 1.25rem; } .cg-hand-tray { position: sticky; bottom: env(safe-area-inset-bottom); } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
 }

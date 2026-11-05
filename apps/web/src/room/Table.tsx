@@ -20,6 +20,7 @@ import { WinParticles } from "../ui/WinParticles";
 import { Avatar } from "../ui/Avatar";
 import { Modal } from "../ui/Modal";
 import { ChipStack } from "../components/ChipStack";
+import { useWakeLock } from "../hooks/useWakeLock";
 
 /** Generic table shell (room lobby + debug game view). Per-game UIs plug in under src/games/<id>/ (ChatGPT). */
 export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
@@ -55,6 +56,7 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
     wasActing.current = acting;
   }, [view]);
   useEffect(() => { if (result?.payouts.some((p) => p.seat === view?.seat && p.delta > 0)) vibrate("win"); }, [result]);
+  useWakeLock(info?.phase === "playing");
 
   if (!info) return <div className="p-6">Đang vào phòng…</div>;
   const isHost = info.hostSeat === mySeat;

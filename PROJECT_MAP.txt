@@ -72,6 +72,8 @@ ROOT/
 │        ├─ audio/                # Tổng hợp SFX/nhạc nền Web Audio + bảng chỉnh âm lượng  [DONE][GPT]
 │        │  ├─ sound.ts / SoundSettings.tsx  # Âm thanh procedural, cài đặt lưu localStorage  [DONE][GPT]
 │        ├─ hooks/useGameSounds.ts  # Adapter SFX game sang audio service  [DONE][GPT]
+│        ├─ hooks/useWakeLock.ts  # Giữ màn hình sáng trong ván đang chơi  [DONE][GPT]
+│        ├─ public/manifest.webmanifest / icon.svg / icons/*.png  # PWA metadata + icons  [DONE][GPT]
 │        ├─ net/               # Kết nối Colyseus, Supabase auth, LiveKit mic
 │        └─ assets/            # Ảnh, âm thanh (ghi giấy phép vào ASSETS.md)
 └─ docs/ (tuỳ chọn)            # Tài liệu bổ sung
