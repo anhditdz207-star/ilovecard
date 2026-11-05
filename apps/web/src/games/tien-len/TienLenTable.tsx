@@ -15,11 +15,15 @@ export function TienLenTable({ info, data, seat, toAct, result, send, error, dea
   send: (type: string, extra?: object) => void; error?: string; deadline?: number | null;
 }) {
   const [selected, setSelected] = useState<GameCard[]>([]);
+  const [sortedHand, setSortedHand] = useState<GameCard[]>(data.hand);
   const [now, setNow] = useState(Date.now());
   const [chopFlash, setChopFlash] = useState(false);
   const priorLead = useRef<TLView["lead"]>(null);
+  const dragSelecting = useRef(false);
   const sounds = useGameSounds();
   useEffect(() => { setSelected((cards) => cards.filter((card) => data.hand.some((inHand) => cardId(inHand) === cardId(card)))); }, [data.hand]);
+  useEffect(() => { setSortedHand(data.hand); }, [data.hand]);
+  useEffect(() => { const stop = () => { dragSelecting.current = false; }; window.addEventListener("pointerup", stop); return () => window.removeEventListener("pointerup", stop); }, []);
   useEffect(() => {
     if (!deadline) return;
     const timer = setInterval(() => setNow(Date.now()), 250);
@@ -45,6 +49,7 @@ export function TienLenTable({ info, data, seat, toAct, result, send, error, dea
   const playable = acting && !!combo;
   const payout = new Map(result?.payouts.map((p) => [p.seat, p.delta]));
   const toggle = (card: GameCard) => setSelected((cards) => cards.some((x) => cardId(x) === cardId(card)) ? cards.filter((x) => cardId(x) !== cardId(card)) : [...cards, card]);
+  const sortHand = (descending: boolean) => setSortedHand([...data.hand].sort((a, b) => (a.rank - b.rank || a.suit.localeCompare(b.suit)) * (descending ? -1 : 1)));
   const play = () => { sounds.card(); send("action", { a: { type: "play", cards: selected } }); };
   const pass = () => { sounds.pass(); send("action", { a: { type: "pass" } }); };
 
@@ -73,9 +78,9 @@ export function TienLenTable({ info, data, seat, toAct, result, send, error, dea
 
       {data.over && <div className="cg-win mb-4 rounded-2xl bg-amber-300/10 p-3 text-center font-bold text-amber-100">Ván đã kết thúc{result ? " · Chip đã chốt" : " · Đang chốt chip…"}</div>}
       {!data.over && <section className="cg-hand-tray border border-white/10 bg-emerald-950/90 p-3 sm:p-5 lg:static">
-        <div className="mb-2 flex flex-wrap items-center justify-between gap-2"><div><b>{acting ? "Bài trên tay" : `Đang tới lượt ${info.seats[current]?.name ?? "người chơi"}`}</b><span className="ml-2 text-xs text-emerald-100/50">{data.hand.length} lá</span></div>{acting && deadline && <span className="rounded-full bg-white/10 px-3 py-1 text-xs">Còn {Math.max(0, Math.ceil((deadline - now) / 1000))} giây</span>}</div>
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2"><div><b>{acting ? "Bài trên tay" : `Đang tới lượt ${info.seats[current]?.name ?? "người chơi"}`}</b><span className="ml-2 text-xs text-emerald-100/50">{data.hand.length} lá</span></div><div className="flex items-center gap-2">{acting && <><button className="rounded-lg bg-white/10 px-3 py-2 text-xs" onClick={() => sortHand(false)}>Xếp ↑</button><button className="rounded-lg bg-white/10 px-3 py-2 text-xs" onClick={() => sortHand(true)}>Xếp ↓</button></>}{acting && deadline && <span className="rounded-full bg-white/10 px-3 py-1 text-xs">Còn {Math.max(0, Math.ceil((deadline - now) / 1000))} giây</span>}</div></div>
         {data.mustInclude && <div className="mb-2 flex items-center gap-2 text-xs text-amber-200">Nước đầu phải có <Card card={data.mustInclude} size="sm" /></div>}
-        <div className="flex min-h-20 items-end gap-1 overflow-x-auto py-2 sm:min-h-28 sm:gap-2">{data.hand.map((card, index) => { const chosen = selected.some((x) => cardId(x) === cardId(card)); return <Card key={cardId(card)} card={card} size="md" delay={index * 22} selected={chosen} disabled={!acting} onClick={() => { sounds.card(); toggle(card); }} />; })}</div>
+        <div className="cg-fan-hand flex min-h-20 items-end justify-center gap-1 overflow-x-auto py-2 sm:min-h-28 sm:gap-2">{sortedHand.map((card, index) => { const chosen = selected.some((x) => cardId(x) === cardId(card)); const fanAngle = (index - (sortedHand.length - 1) / 2) * 1.6; return <Card key={cardId(card)} card={card} size="md" delay={index * 22} selected={chosen} disabled={!acting} className="cg-fan-card" style={{ "--cg-fan-angle": `${fanAngle}deg` } as React.CSSProperties} onPointerDown={() => { dragSelecting.current = true; }} onPointerEnter={() => { if (dragSelecting.current && acting && !chosen) toggle(card); }} onClick={() => { sounds.card(); toggle(card); }} />; })}</div>
         {acting && <div className="mt-3 flex flex-wrap items-center gap-2"><button disabled={!playable} onClick={play} className="rounded-xl bg-amber-400 px-5 py-3 font-black text-emerald-950 disabled:cursor-not-allowed disabled:opacity-40">Đánh</button><button disabled={!data.canPass} onClick={pass} className="rounded-xl bg-white/10 px-5 py-3 font-bold disabled:cursor-not-allowed disabled:opacity-40">Bỏ lượt</button>{combo && !canBeat && <span className="text-xs text-amber-100/80">Bộ này có thể không chặn được lượt trước.</span>}</div>}
         {error && <p role="alert" className="mt-3 rounded-lg border border-rose-300/30 bg-rose-950/40 px-3 py-2 text-sm text-rose-200">{error}</p>}
       </section>}

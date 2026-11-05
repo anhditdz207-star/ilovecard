@@ -17,6 +17,9 @@ import { TienLenTable } from "../games/tien-len/TienLenTable";
 import { SoundSettings } from "../audio/SoundSettings";
 import { vibrate } from "../audio/sound";
 import { WinParticles } from "../ui/WinParticles";
+import { Avatar } from "../ui/Avatar";
+import { Modal } from "../ui/Modal";
+import { ChipStack } from "../components/ChipStack";
 
 /** Generic table shell (room lobby + debug game view). Per-game UIs plug in under src/games/<id>/ (ChatGPT). */
 export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
@@ -28,6 +31,7 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
   const [tableError, setTableError] = useState("");
   const [now, setNow] = useState(Date.now());
   const [showRules, setShowRules] = useState(false);
+  const [dismissedResult, setDismissedResult] = useState<S2C["result"] | null>(null);
   const wasActing = useRef(false);
   const send = (t: string, extra: object = {}) => { if (t === "action") setTableError(""); room.send("m", { t, ...extra }); };
 
@@ -60,8 +64,8 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
     <div className={`relative mx-auto p-4 ${["bau-cua", "xi-dach", "tien-len-nam", "tien-len-bac", "bai-cao-to"].includes(info.gameId) ? "max-w-6xl" : "max-w-3xl"}`}>
       <WinParticles trigger={result?.payouts.map((p) => `${p.seat}:${p.delta}`).join(",")} />
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xl font-bold">Phòng {info.code} · {info.gameId} · cược {info.baseBet}</h2>
-        <div className="flex gap-2">
+        <div><button className="text-left text-xl font-bold hover:text-amber-100" title="Nhấn để sao chép mã phòng" onClick={() => { void navigator.clipboard?.writeText(info.code); }}>Phòng {info.code} ⧉</button><div className="mt-1 text-xs text-emerald-200/70">{info.gameId} · cược {info.baseBet} · chip của bạn: {(info.seats[mySeat]?.chips ?? 0).toLocaleString()}</div></div>
+        <div className="flex flex-wrap gap-2">
           <SoundSettings />
           <button className="rounded bg-emerald-800 px-3 py-1 text-sm" onClick={() => setShowRules(true)}>Hướng dẫn</button>
           <button className="rounded bg-red-700 px-3 py-1 text-sm" onClick={() => { room.leave(); onLeave(); }}>Thoát</button>
@@ -71,11 +75,11 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
       {paused && <div className="mb-3 rounded bg-amber-600/30 p-2">⏸ Tạm dừng: chờ người chơi quay lại ({Math.max(0, Math.ceil((info.paused!.until - now) / 1000))}s)</div>}
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
         {info.seats.map((s, i) => (
-          <div key={i} className="rounded-lg bg-emerald-900 p-2 ring-1 ring-emerald-500/30">
+          <div key={i} className="rounded-xl bg-emerald-900/80 p-2 ring-1 ring-emerald-500/30">
             {s ? (
               <>
-                <div className="font-semibold">{s.name}{i === info.hostSeat ? " 👑" : ""}{i === info.dealerSeat ? " 🏦cái" : ""}{s.isBot ? " 🤖" : ""}</div>
-                <div className="text-xs">{s.chips.toLocaleString()} chip{!s.connected && !s.isBot ? " · mất kết nối" : ""}</div>
+                <Avatar name={s.name} chips={s.chips} active={!!view?.toAct.includes(i)} dealer={i === info.dealerSeat} host={i === info.hostSeat} bot={s.isBot} seconds={view?.deadline ? Math.max(0, Math.ceil((view.deadline - now) / 1000)) : null} />
+                {!s.connected && !s.isBot && <div className="mt-1 text-xs text-rose-200">Mất kết nối</div>}
                 {info.phase === "lobby" && (
                   <div className="mt-1 flex gap-1 text-xs">
                     {info.hasDealer && <button className="rounded bg-emerald-700 px-2" onClick={() => send("setDealer", { seat: i })}>Làm cái</button>}
@@ -117,9 +121,7 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
           )}
         </div>
       )}
-      {result && info.phase === "lobby" && (
-        <div className="mt-3 rounded bg-emerald-900 p-2 text-sm">Kết quả ván trước: {result.payouts.map((p) => `ghế ${p.seat}: ${p.delta > 0 ? "+" : ""}${p.delta}`).join(" · ")}</div>
-      )}
+      {result && info.phase === "lobby" && dismissedResult !== result && <Modal title="Kết quả ván" onClose={() => setDismissedResult(result)}><div className="space-y-2">{result.payouts.map((p) => <div key={p.seat} className="flex items-center justify-between rounded-lg bg-black/20 p-2"><span>{info.seats[p.seat]?.name ?? `Ghế ${p.seat}`}</span><span className={p.delta > 0 ? "text-amber-200" : p.delta < 0 ? "text-rose-200" : "text-emerald-100/70"}>{p.delta > 0 ? "+" : ""}{p.delta.toLocaleString()} chip</span></div>)}<div className="flex items-center justify-between border-t border-white/10 pt-3"><span>Chip hiện tại</span><ChipStack value={info.seats[mySeat]?.chips ?? 0} compact /></div>{isHost && <button className="cg-button-primary mt-3 w-full" onClick={() => { setDismissedResult(result); send("start"); }}>Ván mới</button>}</div></Modal>}
       <div className="mt-3 text-xs text-emerald-200/70">{notices.map((n, i) => <div key={i}>{n}</div>)}</div>
       {showRules && <RulesModal id={info.gameId} name={info.gameId} onClose={() => setShowRules(false)} />}
     </div>

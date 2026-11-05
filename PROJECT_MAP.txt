@@ -1,7 +1,7 @@
 PROJECT_MAP.txt  --  Sơ đồ cây + chú thích. ĐỌC FILE NÀY ĐẦU TIÊN mỗi lần bắt đầu việc.
 Cập nhật NGAY khi thêm/xoá/đổi tên/đổi vai trò file. Mỗi dòng: đường dẫn  # chú thích  [trạng thái] [chủ: CLAUDE|GPT|OWNER]
 Trạng thái: PLAN = chưa làm | WIP = đang làm | DONE = xong có test
-Cập nhật lần cuối: 2026-11-05 GPT (Bài Cào Tố integration)
+Cập nhật lần cuối: 2026-11-05 GPT (UI AAA T4 game reskin)
 
 ROOT/
 ├─ SPEC.md                     # Luật dự án, stack, hợp đồng engine, giai đoạn. Nguồn sự thật duy nhất  [DONE][CLAUDE]

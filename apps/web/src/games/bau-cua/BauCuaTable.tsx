@@ -57,10 +57,10 @@ export function BauCuaTable({ info, data, seat, toAct, result, send }: {
             const item = TILE_INFO[tile];
             const count = diceCounts[index]!;
             const ownBet = data.bets[seat]?.[tile] ?? 0;
-            return <article key={tile} className={`group relative overflow-hidden rounded-3xl border p-3 transition duration-300 sm:p-4 ${count ? "scale-[1.02] border-amber-200 bg-amber-200/15 shadow-[0_0_35px_#f6c75e55]" : "border-white/10 bg-black/20 hover:-translate-y-0.5 hover:border-amber-100/40"}`}>
+            return <article key={tile} className={`group relative overflow-hidden rounded-3xl border p-4 transition duration-300 sm:p-5 ${count ? "cg-dice-shake scale-[1.02] border-amber-200 bg-amber-200/15 shadow-[0_0_35px_#f6c75e55]" : "border-white/10 bg-black/20 hover:-translate-y-0.5 hover:border-amber-100/40"}`}>
               <div className={`absolute inset-x-4 top-0 h-1 rounded-b-full bg-gradient-to-r ${item.color} opacity-80`} />
               <div className="flex items-center gap-3">
-                <div className={`grid size-14 place-items-center rounded-2xl bg-gradient-to-br ${item.color} text-3xl shadow-lg sm:size-16 sm:text-4xl`}>{item.icon}</div>
+                <div className={`grid size-16 place-items-center rounded-2xl bg-gradient-to-br ${item.color} text-4xl shadow-lg sm:size-20 sm:text-5xl`}>{item.icon}</div>
                 <div className="min-w-0 flex-1"><h3 className="text-lg font-extrabold">{item.name}</h3><div className="text-xs text-emerald-100/60">{data.phase === "over" ? `${count} mặt xuất hiện` : "Đặt chip vào cửa này"}</div></div>
                 {count > 0 && <span className="animate-bounce rounded-full bg-amber-300 px-2.5 py-1 text-sm font-black text-emerald-950">×{count}</span>}
               </div>

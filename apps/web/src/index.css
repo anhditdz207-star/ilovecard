@@ -2,7 +2,7 @@
 :root { --cg-felt: #0b382b; --cg-felt-dark: #071e17; --cg-panel: #103f31; --cg-gold: #f4c65b; --cg-ink: #10251d; }
 html, body, #root { min-height: 100%; }
 body { margin: 0; background: var(--cg-felt-dark); color: #e8f1ec; font-family: system-ui, sans-serif; }
-.cg-table { position: relative; overflow: hidden; border: 1px solid rgb(244 198 91 / 16%); border-radius: 2rem; background: radial-gradient(ellipse at center, #176348 0%, var(--cg-felt) 56%, var(--cg-felt-dark) 100%); box-shadow: 0 24px 70px rgb(0 0 0 / 28%); }
+.cg-table { position: relative; overflow: hidden; border: 9px solid #63401f; border-radius: 2rem; background: radial-gradient(ellipse at center, #176348 0%, var(--cg-felt) 56%, var(--cg-felt-dark) 100%); box-shadow: inset 0 0 0 2px #d3a64c, inset 0 0 46px #04180f, 0 24px 70px rgb(0 0 0 / 28%); }
 .cg-panel { border: 1px solid rgb(255 255 255 / 9%); border-radius: 1.25rem; background: rgb(0 0 0 / 17%); }
 .cg-button-primary { border-radius: .85rem; background: linear-gradient(#ffda78, var(--cg-gold)); padding: .7rem 1.1rem; color: var(--cg-ink); font-weight: 800; transition: filter .18s, transform .18s; }
 .cg-button-primary:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
@@ -73,6 +73,11 @@ body { margin: 0; background: var(--cg-felt-dark); color: #e8f1ec; font-family: 
 .cg-chop-flash { animation: cg-chop .5s ease-out both; }
 .cg-win { animation: cg-win .5s ease-out both; }
 .cg-win-particles { position: fixed; z-index: 70; inset: 0; width: 100vw; height: 100dvh; pointer-events: none; }
+.cg-fan-hand { perspective: 900px; }
+.cg-fan-card { rotate: var(--cg-fan-angle, 0deg); transform-origin: 50% 115%; }
+.cg-fan-card:hover:not(:disabled) { z-index: 2; rotate: 0deg; translate: 0 -.6rem; }
+.cg-dice-shake { animation: cg-dice-shake .42s ease-in-out 2; }
+@keyframes cg-dice-shake { 0%,100% { transform: translateX(0) rotate(0); } 20% { transform: translateX(-3px) rotate(-1deg); } 40% { transform: translateX(3px) rotate(1deg); } 60% { transform: translateX(-2px) rotate(-.6deg); } 80% { transform: translateX(2px) rotate(.6deg); } }
 .cg-hand-tray { position: sticky; bottom: .35rem; z-index: 10; border-radius: 1rem; background: linear-gradient(180deg, rgb(7 30 23 / 72%), #071e17 35%); backdrop-filter: blur(10px); }
 @keyframes cg-card-deal { from { opacity: 0; transform: translateY(-.6rem) rotate(-3deg) scale(.92); } to { opacity: 1; transform: translateY(0) rotate(0) scale(1); } }
 @keyframes cg-card-flip { from { opacity: .45; transform: rotateY(80deg); } to { opacity: 1; transform: rotateY(0); } }

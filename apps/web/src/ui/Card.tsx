@@ -1,12 +1,13 @@
 import type { Card as PlayingCard } from "@cg/shared";
+import type { CSSProperties } from "react";
 import { motion } from "framer-motion";
 
 const rankLabel = (rank: number) => ({ 1: "A", 11: "J", 12: "Q", 13: "K" })[rank] ?? String(rank);
 const suitLabel = { S: "♠", C: "♣", D: "♦", H: "♥" } as const;
 const redSuit = (suit: PlayingCard["suit"]) => suit === "D" || suit === "H";
-type Props = { card?: PlayingCard | null; hidden?: boolean; faceDown?: boolean; selected?: boolean; dim?: boolean; highlight?: boolean; size?: "sm" | "md" | "lg"; delay?: number; onClick?: () => void; disabled?: boolean; className?: string };
+type Props = { card?: PlayingCard | null; hidden?: boolean; faceDown?: boolean; selected?: boolean; dim?: boolean; highlight?: boolean; size?: "sm" | "md" | "lg"; delay?: number; onClick?: () => void; onPointerDown?: () => void; onPointerEnter?: () => void; disabled?: boolean; className?: string; style?: CSSProperties };
 
-export function Card({ card, hidden = false, faceDown = false, selected = false, dim = false, highlight = false, size = "md", delay = 0, onClick, disabled = false, className = "" }: Props) {
+export function Card({ card, hidden = false, faceDown = false, selected = false, dim = false, highlight = false, size = "md", delay = 0, onClick, onPointerDown, onPointerEnter, disabled = false, className = "", style = {} }: Props) {
   const down = hidden || faceDown || !card;
   const suit = card ? suitLabel[card.suit] : "";
   const rank = card ? rankLabel(card.rank) : "";
@@ -20,5 +21,6 @@ export function Card({ card, hidden = false, faceDown = false, selected = false,
   </svg>;
   const label = down ? "Lá bài úp" : `${rank} ${suit}`;
   const motionProps = { initial: { opacity: 0, y: -18, rotate: -4, rotateY: down ? 0 : 65 }, animate: { opacity: 1, y: selected ? -9 : 0, rotate: 0, rotateY: 0 }, transition: { type: "spring" as const, stiffness: 280, damping: 22, delay: delay / 1000 } };
-  return onClick ? <motion.button {...motionProps} type="button" aria-label={label} aria-pressed={selected} disabled={disabled} className={classes} onClick={onClick} whileTap={{ scale: .96 }}>{content}</motion.button> : <motion.div {...motionProps} role="img" aria-label={label} className={classes}>{content}</motion.div>;
+  const cardStyle = { ...style, animationDelay: `${delay}ms` };
+  return onClick ? <motion.button {...motionProps} type="button" aria-label={label} aria-pressed={selected} disabled={disabled} className={classes} style={cardStyle} onClick={onClick} onPointerDown={onPointerDown} onPointerEnter={onPointerEnter} whileTap={{ scale: .96 }}>{content}</motion.button> : <motion.div {...motionProps} role="img" aria-label={label} className={classes} style={cardStyle}>{content}</motion.div>;
 }
