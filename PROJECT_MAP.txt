@@ -52,9 +52,11 @@ ROOT/
 │  │  └─ src/ (rooms/TableRoom.ts = ghế/cái/bot/tạm dừng 15s/kick, rooms/LobbyRoom.ts = chat sảnh, registry.ts = đăng ký các engine, auth.ts, store.ts = sổ chip (RAM, sẽ thay Supabase), index.ts; tests/rooms.test.ts + xidach-room.test.ts + tienlen-room.test.ts)  [DONE][GPT+CLAUDE]
 │  └─ web/                     # Giao diện React+Vite+Tailwind (khung mẫu P0, GPT làm đẹp + thêm PixiJS)  [WIP][GPT]
 │     └─ src/
+│        ├─ App.tsx             # Màn hình tên người chơi + app shell  [DONE][GPT]
 │        ├─ index.css          # Theme tokens, lá/chip, animation, responsive landscape  [DONE][GPT]
 │        ├─ app/               # Router, layout, theme (desktop đẹp / mobile gọn)
 │        ├─ lobby/             # Sảnh: chọn game, bạn bè, chat, tạo/vào phòng, nút Hướng dẫn
+│        │  ├─ Lobby.tsx / GameIcon.tsx  # Lobby, quick play với máy, icon vector game  [DONE][GPT]
 │        ├─ room/              # Phòng chờ: chọn cái, thêm bot, mời, bắt đầu
 │        ├─ games/<id>/        # UI bàn chơi riêng từng game  [DONE][GPT]
 │        │  ├─ bau-cua/BauCuaTable.tsx  [DONE][GPT]
