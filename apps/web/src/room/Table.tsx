@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Room } from "colyseus.js";
 import type { RoomInfo, S2C } from "@cg/shared";
 import type { BauCuaView } from "@cg/game-bau-cua";
@@ -14,6 +14,8 @@ import type { XiDachView } from "@cg/game-xi-dach";
 import { XiDachTable } from "../games/xi-dach/XiDachTable";
 import type { TLView } from "@cg/game-tien-len";
 import { TienLenTable } from "../games/tien-len/TienLenTable";
+import { SoundSettings } from "../audio/SoundSettings";
+import { vibrate } from "../audio/sound";
 
 /** Generic table shell (room lobby + debug game view). Per-game UIs plug in under src/games/<id>/ (ChatGPT). */
 export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
@@ -25,6 +27,7 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
   const [tableError, setTableError] = useState("");
   const [now, setNow] = useState(Date.now());
   const [showRules, setShowRules] = useState(false);
+  const wasActing = useRef(false);
   const send = (t: string, extra: object = {}) => { if (t === "action") setTableError(""); room.send("m", { t, ...extra }); };
 
   useEffect(() => {
@@ -41,15 +44,23 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
     return () => clearInterval(iv);
   }, [room]);
 
+  useEffect(() => {
+    const acting = !!view?.toAct.includes(view.seat);
+    if (acting && !wasActing.current) vibrate("turn");
+    wasActing.current = acting;
+  }, [view]);
+  useEffect(() => { if (result?.payouts.some((p) => p.seat === view?.seat && p.delta > 0)) vibrate("win"); }, [result]);
+
   if (!info) return <div className="p-6">Đang vào phòng…</div>;
   const isHost = info.hostSeat === mySeat;
   const paused = info.phase === "paused" && info.paused;
 
   return (
     <div className={`mx-auto p-4 ${["bau-cua", "xi-dach", "tien-len-nam", "tien-len-bac", "bai-cao-to"].includes(info.gameId) ? "max-w-6xl" : "max-w-3xl"}`}>
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-xl font-bold">Phòng {info.code} · {info.gameId} · cược {info.baseBet}</h2>
         <div className="flex gap-2">
+          <SoundSettings />
           <button className="rounded bg-emerald-800 px-3 py-1 text-sm" onClick={() => setShowRules(true)}>Hướng dẫn</button>
           <button className="rounded bg-red-700 px-3 py-1 text-sm" onClick={() => { room.leave(); onLeave(); }}>Thoát</button>
         </div>

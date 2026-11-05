@@ -3,6 +3,7 @@ import type { Room } from "colyseus.js";
 import { GAME_CATALOG, type GameId } from "@cg/shared";
 import { client, guestAuth } from "../net/client";
 import { RulesModal } from "../components/RulesModal";
+import { SoundSettings } from "../audio/SoundSettings";
 
 export function Lobby({ name, onJoinTable }: { name: string; onJoinTable: (room: Room) => void }) {
   const [msgs, setMsgs] = useState<{ name: string; text: string }[]>([]);
@@ -38,7 +39,7 @@ export function Lobby({ name, onJoinTable }: { name: string; onJoinTable: (room:
   return (
     <div className="mx-auto grid max-w-6xl gap-4 p-4 md:grid-cols-[1fr_320px]">
       <section>
-        <h1 className="mb-3 text-2xl font-bold">Sảnh game · xin chào {name}</h1>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2"><h1 className="text-2xl font-bold">Sảnh game · xin chào {name}</h1><SoundSettings /></div>
         <p className="mb-3 text-xs text-emerald-200/70">Chơi giải trí bằng chip ảo, không dùng tiền thật.</p>
         <div className="mb-4 flex gap-2">
           <input className="rounded bg-emerald-900 px-3 py-1.5" placeholder="Mã phòng" value={code} onChange={(e) => setCode(e.target.value)} />
