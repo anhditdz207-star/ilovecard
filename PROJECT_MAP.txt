@@ -1,7 +1,7 @@
 PROJECT_MAP.txt  --  Sơ đồ cây + chú thích. ĐỌC FILE NÀY ĐẦU TIÊN mỗi lần bắt đầu việc.
 Cập nhật NGAY khi thêm/xoá/đổi tên/đổi vai trò file. Mỗi dòng: đường dẫn  # chú thích  [trạng thái] [chủ: CLAUDE|GPT|OWNER]
 Trạng thái: PLAN = chưa làm | WIP = đang làm | DONE = xong có test
-Cập nhật lần cuối: 2026-11-04 GPT (Tiến Lên integration)
+Cập nhật lần cuối: 2026-11-05 GPT (Bài Cào Tố integration)
 
 ROOT/
 ├─ SPEC.md                     # Luật dự án, stack, hợp đồng engine, giai đoạn. Nguồn sự thật duy nhất  [DONE][CLAUDE]
@@ -36,6 +36,7 @@ ROOT/
 │     │  ├─ src/index.ts  [DONE][GPT]
 │     │  └─ tests/bai-cao.test.ts  [DONE][GPT]
 │     ├─ bai-cao-to/           # Bài cào tố  [PLAN][CLAUDE]
+│     │  ├─ package.json / tsconfig.json / src/index.ts / tests/  # Engine + tests  [DONE][CLAUDE]
 │     ├─ baccarat/             # Baccarat engine + tests  [DONE][GPT]
 │     │  ├─ package.json / tsconfig.json  [DONE][GPT]
 │     │  ├─ src/index.ts  [DONE][GPT]
@@ -59,6 +60,7 @@ ROOT/
 │        │  ├─ bau-cua/BauCuaTable.tsx  [DONE][GPT]
 │        │  ├─ baccarat/BaccaratTable.tsx  [DONE][GPT]
 │        │  ├─ bai-cao/BaiCaoTable.tsx  [DONE][GPT]
+│        │  ├─ bai-cao-to/BaiCaoToTable.tsx  [DONE][GPT]
 │        │  ├─ xi-dach/XiDachTable.tsx  [DONE][GPT]
 │        │  └─ tien-len/TienLenTable.tsx  [DONE][GPT]
 │        ├─ components/        # Card.tsx + ChipStack.tsx dùng chung, RulesModal.tsx  [DONE][GPT]

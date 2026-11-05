@@ -18,3 +18,9 @@
 - Tới trắng (instant win at deal): sảnh rồng (3→A), tứ quý heo, 6 đôi; each opponent pays 3 bets. Not implemented: 5 đôi thông tới trắng, tứ quý 3.
 - Losers pay at most their chips; winners share what was collected (settleNet).
 - Human timeout: pass if allowed, else play the lowest single.
+
+### Bài cào tố (defaults by Claude, owner to approve; flags in `rulesFlags`)
+- 2–8 players, 3 cards, no dealer. Ante = base bet. One betting round: check / call / raise / fold, ends when all remaining players have matched; then showdown.
+- Points = sum of 3 cards mod 10 (A=1, 10/J/Q/K = 10). Ba tây (J,Q,K) highest. Tie → highest card (K>Q>J>10>…>A, suit ♥>♦>♣>♠); flag `tieBreakByCard=false` splits the pot.
+- Max raises per hand 4 (flag `maxRaises`). Total bet per player capped at the smallest stack at the table → no side pots, nobody can be short.
+- Last player standing wins without showing cards. Human timeout: check if free, else fold.

@@ -23,24 +23,27 @@ importers:
 
   apps/server:
     dependencies:
-      '@cg/game-bau-cua':
-        specifier: workspace:*
-        version: link:../../packages/games/bau-cua
       '@cg/game-baccarat':
         specifier: workspace:*
         version: link:../../packages/games/baccarat
       '@cg/game-bai-cao':
         specifier: workspace:*
         version: link:../../packages/games/bai-cao
-      '@cg/game-xi-dach':
+      '@cg/game-bai-cao-to':
         specifier: workspace:*
-        version: link:../../packages/games/xi-dach
-      '@cg/game-tien-len':
+        version: link:../../packages/games/bai-cao-to
+      '@cg/game-bau-cua':
         specifier: workspace:*
-        version: link:../../packages/games/tien-len
+        version: link:../../packages/games/bau-cua
       '@cg/game-demo':
         specifier: workspace:*
         version: link:../../packages/games/demo
+      '@cg/game-tien-len':
+        specifier: workspace:*
+        version: link:../../packages/games/tien-len
+      '@cg/game-xi-dach':
+        specifier: workspace:*
+        version: link:../../packages/games/xi-dach
       '@cg/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -63,24 +66,27 @@ importers:
 
   apps/web:
     dependencies:
-      '@cg/game-bau-cua':
-        specifier: workspace:*
-        version: link:../../packages/games/bau-cua
       '@cg/game-baccarat':
         specifier: workspace:*
         version: link:../../packages/games/baccarat
       '@cg/game-bai-cao':
         specifier: workspace:*
         version: link:../../packages/games/bai-cao
-      '@cg/game-xi-dach':
+      '@cg/game-bai-cao-to':
         specifier: workspace:*
-        version: link:../../packages/games/xi-dach
-      '@cg/game-tien-len':
+        version: link:../../packages/games/bai-cao-to
+      '@cg/game-bau-cua':
         specifier: workspace:*
-        version: link:../../packages/games/tien-len
+        version: link:../../packages/games/bau-cua
       '@cg/game-demo':
         specifier: workspace:*
         version: link:../../packages/games/demo
+      '@cg/game-tien-len':
+        specifier: workspace:*
+        version: link:../../packages/games/tien-len
+      '@cg/game-xi-dach':
+        specifier: workspace:*
+        version: link:../../packages/games/xi-dach
       '@cg/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -113,12 +119,6 @@ importers:
         specifier: ^6.0.0
         version: 6.4.5(@types/node@22.20.5)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.15)
 
-  packages/games/bau-cua:
-    dependencies:
-      '@cg/shared':
-        specifier: workspace:*
-        version: link:../../shared
-
   packages/games/baccarat:
     dependencies:
       '@cg/shared':
@@ -131,7 +131,19 @@ importers:
         specifier: workspace:*
         version: link:../../shared
 
-  packages/games/xi-dach:
+  packages/games/bai-cao-to:
+    dependencies:
+      '@cg/shared':
+        specifier: workspace:*
+        version: link:../../shared
+
+  packages/games/bau-cua:
+    dependencies:
+      '@cg/shared':
+        specifier: workspace:*
+        version: link:../../shared
+
+  packages/games/demo:
     dependencies:
       '@cg/shared':
         specifier: workspace:*
@@ -143,7 +155,7 @@ importers:
         specifier: workspace:*
         version: link:../../shared
 
-  packages/games/demo:
+  packages/games/xi-dach:
     dependencies:
       '@cg/shared':
         specifier: workspace:*
@@ -2752,7 +2764,7 @@ snapshots:
 
   require-in-the-middle@5.2.0(supports-color@8.1.1):
     dependencies:
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.3.7(supports-color@8.1.1)
       module-details-from-path: 1.0.4
       resolve: 1.22.13
     transitivePeerDependencies:

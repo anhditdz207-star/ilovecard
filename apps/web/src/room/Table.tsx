@@ -8,6 +8,8 @@ import type { BaccaratView } from "@cg/game-baccarat";
 import { BaccaratTable } from "../games/baccarat/BaccaratTable";
 import type { BaiCaoView } from "@cg/game-bai-cao";
 import { BaiCaoTable } from "../games/bai-cao/BaiCaoTable";
+import type { BCTView } from "@cg/game-bai-cao-to";
+import { BaiCaoToTable } from "../games/bai-cao-to/BaiCaoToTable";
 import type { XiDachView } from "@cg/game-xi-dach";
 import { XiDachTable } from "../games/xi-dach/XiDachTable";
 import type { TLView } from "@cg/game-tien-len";
@@ -44,7 +46,7 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
   const paused = info.phase === "paused" && info.paused;
 
   return (
-    <div className={`mx-auto p-4 ${["bau-cua", "xi-dach", "tien-len-nam", "tien-len-bac"].includes(info.gameId) ? "max-w-6xl" : "max-w-3xl"}`}>
+    <div className={`mx-auto p-4 ${["bau-cua", "xi-dach", "tien-len-nam", "tien-len-bac", "bai-cao-to"].includes(info.gameId) ? "max-w-6xl" : "max-w-3xl"}`}>
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-xl font-bold">Phòng {info.code} · {info.gameId} · cược {info.baseBet}</h2>
         <div className="flex gap-2">
@@ -86,6 +88,8 @@ export function Table({ room, onLeave }: { room: Room; onLeave: () => void }) {
         <BaccaratTable info={info} data={view.view as BaccaratView} seat={view.seat} toAct={view.toAct} result={result} send={send} />
       ) : info.gameId === "bai-cao" && info.phase !== "lobby" && view ? (
         <BaiCaoTable info={info} data={view.view as BaiCaoView} seat={view.seat} toAct={view.toAct} result={result} send={send} />
+      ) : info.gameId === "bai-cao-to" && info.phase !== "lobby" && view ? (
+        <BaiCaoToTable info={info} data={view.view as BCTView} seat={view.seat} toAct={view.toAct} result={result} deadline={view.deadline} error={tableError} send={send} />
       ) : info.gameId === "xi-dach" && info.phase !== "lobby" && view ? (
         <XiDachTable info={info} data={view.view as XiDachView} seat={view.seat} toAct={view.toAct} result={result} deadline={view.deadline} send={send} />
       ) : (info.gameId === "tien-len-nam" || info.gameId === "tien-len-bac") && info.phase !== "lobby" && view ? (
